@@ -385,6 +385,7 @@ function buildTopicHead(ctx) {
   };
   actions.append(
     button('refresh', '刷新', 'r', '重新加载（r）'),
+    button('wide', '宽屏', 'w', '宽屏 / 收束楼层内容（w）'),
     button('summary', 'AI 总结', 's', '生成/查看 AI 总结（s）'),
     button('block', '屏蔽', 'b', '屏蔽菜单（b）'),
     button('copy', '复制链接', 'y', '复制原帖链接（y）')

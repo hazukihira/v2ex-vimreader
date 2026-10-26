@@ -98,6 +98,7 @@ const HELP_GROUPS = [
       ['t', '最新楼层页'],
       ['s', 'AI 总结（流式）'],
       ['i', '查看当前楼层图片'],
+      ['w', '宽屏 / 收束楼层内容'],
       ['Enter o', '打开楼层图片 / 链接'],
       ['b u x', '屏蔽菜单 / 作者 / 主题'],
       ['y', '复制原帖链接'],
@@ -113,6 +114,7 @@ const HELP_GROUPS = [
       [':day <YYYY-MM-DD>', '按天查看'],
       [':topic <id>', '打开主题'],
       [':theme dark|light', '切换主题'],
+      [':wide', '宽屏 / 收束楼层内容（也可按 w）'],
       [':refresh', '刷新当前视图'],
       [':block-user <名字>', '屏蔽用户'],
       [':block-topic <id>', '屏蔽主题'],
@@ -133,6 +135,7 @@ const COMMANDS = [
   { name: 'topic', desc: 'topic <id> [页码] 打开主题' },
   { name: 'refresh', desc: '重新加载当前视图' },
   { name: 'theme', desc: 'theme dark|light 切换主题' },
+  { name: 'wide', desc: 'wide 宽屏 / 收束楼层内容' },
   { name: 'block-user', desc: 'block-user <用户名> 屏蔽用户' },
   { name: 'block-topic', desc: 'block-topic <id> 屏蔽主题' },
   { name: 'unblock-user', desc: 'unblock-user <用户名> 解除屏蔽' },
@@ -213,6 +216,23 @@ function applyTheme(theme) {
 function setTheme(theme) {
   applyTheme(theme);
   toast('主题：' + (theme === 'light' ? '浅色' : '暗色'), 'ok');
+}
+
+// 楼层阅读宽度：默认居中窄栏，可切换为铺满横向空间，偏好写入 localStorage。
+function applyWideReading(on) {
+  document.documentElement.classList.toggle('topic-wide', Boolean(on));
+}
+
+function wideReadingOn() {
+  return document.documentElement.classList.contains('topic-wide');
+}
+
+function toggleTopicWide() {
+  const next = !wideReadingOn();
+  applyWideReading(next);
+  try { localStorage.setItem('v2r:wide', next ? '1' : '0'); } catch (e) { /* ignore */ }
+  toast(next ? '宽屏阅读：楼层铺满横向空间' : '收束阅读：楼层恢复居中窄栏', 'ok');
+  requestAnimationFrame(updateFocusCursor);
 }
 
 function setSidebarWidth(px) {
@@ -527,6 +547,7 @@ async function show(route) {
   } else {
     await loadTopic(route, { restore: true });
   }
+  updateFocusCursor();
 }
 
 async function loadList(route, options) {
@@ -876,6 +897,7 @@ function renderTopicView() {
   paintSummary();
   R.paintTopicSelection($('#view'), state.topicSelection);
   updateStatusContext();
+  updateFocusCursor();
 }
 
 function currentFloorPage() {
@@ -937,6 +959,38 @@ function setFloorSelection(index) {
   state.topicSelection = index;
   R.paintTopicSelection($('#view'), index);
   updateStatusContext();
+  updateFocusCursor();
+}
+
+// nvim 风格的单条光标：按当前 OP/楼层定位（长项滚出视口时贴视口上沿）。
+function updateFocusCursor() {
+  const cursor = document.getElementById('focus-cursor');
+  const main = $('#main');
+  if (!cursor || !main) return;
+  if (!state.route || state.route.view !== 'topic' || !state.topic) {
+    cursor.hidden = true;
+    return;
+  }
+  const item = topicItemEl(state.topicSelection);
+  if (!item) {
+    cursor.hidden = true;
+    return;
+  }
+  const mainRect = main.getBoundingClientRect();
+  const itemRect = item.getBoundingClientRect();
+  if (itemRect.bottom < mainRect.top + 4 || itemRect.top > mainRect.bottom - 4) {
+    cursor.hidden = true;
+    return;
+  }
+  const anchor = state.topicSelection < 0 ? item.querySelector('.op-head .author') : item.querySelector('.floor');
+  const rect = (anchor || item).getBoundingClientRect();
+  let left = rect.left - 10;
+  let top = rect.top + 1;
+  if (left < mainRect.left + 4) left = mainRect.left + 4;
+  if (top < mainRect.top + 8) top = mainRect.top + 8;
+  if (top > mainRect.bottom - 26) top = mainRect.bottom - 26;
+  cursor.hidden = false;
+  cursor.style.transform = 'translate3d(' + Math.round(left) + 'px,' + Math.round(top) + 'px,0)';
 }
 
 // 视口提前量：光标移到视口 38%~62% 之外时，页面才跟着滚动，给下一楼留预览空间。
@@ -1546,6 +1600,8 @@ async function runCommand(line) {
     }
     case 'refresh':
       return reloadCurrent({ force: false });
+    case 'wide':
+      return toggleTopicWide();
     case 'theme': {
       const theme = rest[0];
       if (theme === 'dark' || theme === 'light') setTheme(theme);
@@ -1949,6 +2005,7 @@ function topicBindings() {
     'enter': openCurrentTarget,
     'o': openCurrentTarget,
     'i': openCurrentImage,
+    'w': toggleTopicWide,
     's': toggleSummary,
     'b': openBlockMenu,
     'x': blockCurrentTopic,
@@ -1995,6 +2052,13 @@ function bindShell() {
   const manageNodesBtn = document.getElementById('nodes-manage-btn');
   if (manageNodesBtn) manageNodesBtn.addEventListener('click', openNodeManagerView);
   document.getElementById('sidebar-backdrop').addEventListener('click', closeDrawer);
+  document.getElementById('main').addEventListener('scroll', function () {
+    if (state.route && state.route.view === 'topic') requestAnimationFrame(updateFocusCursor);
+  });
+  window.addEventListener('resize', function () {
+    if (state.route && state.route.view === 'topic') requestAnimationFrame(updateFocusCursor);
+  });
+
 
   const resize = $('#sidebar-resize');
   let dragging = false;
@@ -2072,6 +2136,7 @@ function bindShell() {
     else if (act === 'summary') toggleSummary();
     else if (act === 'block') openBlockMenu();
     else if (act === 'copy') copyCurrentLink();
+    else if (act === 'wide') toggleTopicWide();
   });
 
   $('#view').addEventListener('change', function (event) {
@@ -2106,6 +2171,7 @@ function onGlobalKey(event) {
 async function boot() {
   initLightbox();
   applyTheme(store.theme());
+  try { applyWideReading(localStorage.getItem('v2r:wide') === '1'); } catch (e) { /* ignore */ }
   setSidebarWidth(store.sidebarWidth());
   if (store.sidebarCollapsed()) document.body.classList.add('sidebar-collapsed');
   if (isMock) $('#mock-badge').classList.remove('hidden');
