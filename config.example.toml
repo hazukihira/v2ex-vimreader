@@ -1,0 +1,65 @@
+# v2ex-vimreader 示例配置。复制为 config.toml 后修改。
+# 所有配置项都有内置默认值，config.toml 不存在时也能直接运行。
+
+# HTTP 监听地址。默认只监听本机，避免把阅读器暴露到公网。
+listen = "127.0.0.1:7788"
+
+# 数据目录（SQLite 数据库、缓存）。留空使用系统默认目录：
+#   Windows: %LOCALAPPDATA%\\v2ex-vimreader
+#   macOS:   ~/Library/Application Support/v2ex-vimreader
+#   Linux:   ~/.local/share/v2ex-vimreader
+# 也可以相对启动目录，例如 "data"。
+data_dir = ""
+
+log_level = "info" # debug | info | warn | error
+
+[fetch]
+# 请求 V2EX 时使用的 User-Agent。建议保留可识别身份 + 项目地址。
+user_agent = "v2ex-vimreader/0.1 (+https://github.com/hazukihira/v2ex-vimreader)"
+# 全局限速：每秒请求数 / 突发容量。请勿设置得过于激进。
+requests_per_second = 1.0
+burst = 2
+timeout_seconds = 25
+max_retries = 3
+# 本地缓存时间（秒）
+list_cache_seconds = 120
+topic_cache_seconds = 300
+# feed 轮询间隔（秒），站点 feed 与节点 feed 分开
+site_feed_poll_seconds = 600
+node_feed_poll_seconds = 1800
+
+[login]
+# 可选：粘贴浏览器里 v2ex.com 的 Cookie，用于浏览仅登录可见的受限节点。
+# 建议在网页 UI 的登录面板里粘贴（保存在本地 SQLite），或启动时用 -cookie 参数。
+# 这里填写也能生效，但请勿把填好 Cookie 的配置文件提交到公开仓库。
+cookie = ""
+
+[sync]
+# 启动后是否开启后台增量同步（轮询公开 feed，用 ETag 条件请求）。
+enabled = true
+# 站点级 feed（/index.xml、/read.xml），按创建时间收录新主题。
+site_feed = true
+# 侧栏默认节点，同时用于后台轮询 JSON Feed、生成“最新”与按天浏览所需的本地归档。
+# 网页里用 :nodes 修改后保存到本地数据库，会覆盖这里的默认列表。
+followed_nodes = ["tech", "qna", "jobs", "create", "ideas", "apple", "play", "travel", "life", "movie", "music", "reading", "career", "programmer", "android", "ios", "python", "go", "linux", "windows", "hardware", "design", "share", "deals", "invest", "sidehustle", "product", "remote", "games", "openai"]
+
+# 仅登录可见的受限节点：即使站点 feed 对匿名用户可读，也不会被同步；
+# 节点目录里会标记为受限，点击时提示需要登录。
+restricted_nodes = ["nsfw", "sandbox", "chamber", "cheap", "flamewar", "flood", "monthly", "survey"]
+
+[ai]
+# OpenAI Chat Completions 兼容接口（如 DeepSeek、OpenAI、自建网关）。
+enabled = false
+base_url = "https://api.deepseek.com/v1"
+model = "deepseek-chat"
+# 直接写 key 或使用环境变量（二选一，环境变量优先）
+api_key = ""
+api_key_env = "VIMREADER_AI_KEY"
+timeout_seconds = 120
+# 送给模型的正文最大字符数（楼层太多时截断）
+max_input_chars = 60000
+# 自定义 system prompt，留空使用内置中文总结提示词
+prompt = ""
+# 额外的 HTTP Header，例如中转站需要的 X-Title / HTTP-Referer
+[ai.headers]
+# X-Title = "v2ex-vimreader"

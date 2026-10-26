@@ -1,0 +1,27 @@
+# build output
+/bin/
+/dist/
+/v2ex-vimreader.exe
+/v2ex-vimreader
+*.exe
+
+# local data (SQLite db, logs)
+/data/
+*.db
+*.db-wal
+*.db-shm
+*.log
+
+# editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# local config overrides (may contain cookies or API keys)
+config.toml
+config.local.toml
+.env
+
+# local UI scratch files (screenshots, mock shots)
+.tmp-ui/

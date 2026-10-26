@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>v2ex-vimreader</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOSIgZmlsbD0iI2Q5Nzc1NyIvPjxwYXRoIGQ9Ik05LjUgMTAuNSAxNiAyMS41IDIyLjUgMTAuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTgxNzE1IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==">
+<link rel="stylesheet" href="/css/app.css?v=20261027">
+<script>
+  try {
+    var t = localStorage.getItem('v2r:theme');
+    if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+</head>
+<body>
+<div id="progress" aria-hidden="true"><i></i></div>
+
+<header id="topbar">
+  <button id="sidebar-toggle" class="icon-btn" type="button" title="切换侧栏 (\\)" aria-label="切换侧栏">☰</button>
+  <a class="brand" href="#/home" title="v2ex-vimreader">v2ex-vimreader</a>
+  <span id="mock-badge" class="badge-mock hidden" title="mock 数据模式">MOCK</span>
+  <nav id="tabs" aria-label="主视图">
+    <a class="tab" data-tab="home" href="#/home">首页</a>
+    <a class="tab" data-tab="recent" href="#/recent">最近</a>
+    <a class="tab" data-tab="new" href="#/new">最新</a>
+    <a class="tab" data-tab="day" href="#/day">按天</a>
+  </nav>
+  <div class="top-right">
+    <span id="sync-state" class="sync" title="同步状态"><i class="dot"></i><span id="sync-text">未同步</span></span>
+    <span id="rate-text" class="muted num" title="API 配额剩余"></span>
+    <button id="help-btn" class="icon-btn" type="button" title="帮助 (?)" aria-label="帮助">?</button>
+  </div>
+</header>
+
+<div id="layout">
+  <aside id="sidebar" aria-label="节点与过滤">
+    <div class="side-section">
+      <div class="side-head"><span>常用节点</span><span class="side-head-actions"><button id="nodes-manage-btn" class="mini-btn" type="button" title="管理常用节点（搜索 / 多选 / 保存）">管理</button><button id="nodes-btn" class="mini-btn" type="button" title="节点目录 (:)">全部</button></span></div>
+      <nav id="followed-nodes" class="nodes" aria-label="常用节点"></nav>
+    </div>
+    <form id="filter-form" class="side-filter" autocomplete="off">
+      <div class="side-head"><span>过滤当前列表</span><button id="filter-clear" class="mini-btn" type="button">清除</button></div>
+      <input id="filter-input" type="search" placeholder="关键词（/ 聚焦）" autocomplete="off" spellcheck="false" aria-label="过滤当前列表">
+      <div id="filter-info" class="muted"></div>
+    </form>
+    <div id="side-archive" class="side-foot muted"></div>
+  </aside>
+  <div id="sidebar-resize" title="拖动调整侧栏宽度" aria-hidden="true"></div>
+  <div id="sidebar-backdrop" class="hidden" aria-hidden="true"></div>
+  <main id="main" tabindex="-1">
+    <div id="view"></div>
+  </main>
+</div>
+
+<footer id="statusbar">
+  <span id="st-context" class="st-context"></span>
+  <span id="st-hint" class="muted st-hint"></span>
+  <span class="spacer"></span>
+  <span id="st-page" class="num"></span>
+  <button id="login-state" class="login-state" type="button" title="登录 V2EX (g l)">未登录</button>
+  <span id="st-msg" class="st-msg" role="status" aria-live="polite"></span>
+  <span id="st-clock" class="num muted"></span>
+</footer>
+
+<div id="overlay-root"></div>
+<div id="toast-root" aria-live="polite"></div>
+
+<div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="图片查看">
+  <div class="lb-stage">
+    <button id="lb-prev" class="lb-arrow" type="button" title="上一张 (←)" aria-label="上一张">‹</button>
+    <img id="lb-img" alt="">
+    <button id="lb-next" class="lb-arrow" type="button" title="下一张 (→)" aria-label="下一张">›</button>
+  </div>
+  <div class="lb-bar">
+    <span id="lb-caption"></span>
+    <span id="lb-count" class="num muted"></span>
+    <span class="spacer"></span>
+    <a id="lb-orig" href="#" target="_blank" rel="noopener noreferrer">打开原图 ↗</a>
+    <button id="lb-close" class="icon-btn" type="button" title="关闭 (Esc)" aria-label="关闭">✕</button>
+  </div>
+</div>
+
+<script type="module" src="/js/app.js?v=20261027"></script>
+</body>
+</html>

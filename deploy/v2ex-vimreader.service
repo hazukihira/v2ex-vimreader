@@ -1,0 +1,22 @@
+[Unit]
+Description=v2ex-vimreader - a quiet V2EX reader
+Documentation=https://github.com/hazukihira/v2ex-vimreader
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=v2ex-vimreader
+Group=v2ex-vimreader
+WorkingDirectory=/var/lib/v2ex-vimreader
+ExecStart=/usr/local/bin/v2ex-vimreader -no-open -config /etc/v2ex-vimreader/config.toml -data /var/lib/v2ex-vimreader
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/v2ex-vimreader
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>V2EX</title>
+<subtitle>way to explore</subtitle>
+
+
+<link rel="alternate" type="text/html" href="https://www.v2ex.com/" />
+<link rel="self" type="application/atom+xml" href="https://www.v2ex.com/index.xml" />
+<id>https://www.v2ex.com/</id>
+
+<updated>2026-10-26T08:50:08Z</updated>
+
+<rights>Copyright © 2010-2018, V2EX</rights>
+<entry>
+	<title>[职场话题] [快被裁了]扛了这么久，终于是快我了</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251966#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251966</id>
+	<published>2026-10-26T08:50:08Z</published>
+	<updated>2026-10-26T08:50:08Z</updated>
+	<author>
+		<name>roykingH</name>
+		<uri>https://www.v2ex.com/member/roykingH</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	自认为不管是做管理还是开发仔，都坚持实事求是，做了就是做了，没做就是没做，下三滥的管理手段咋不做。没想到自己一直鄙夷的办公室政治手段，最后还是会用在自己身上。<br /><br />前领导因为办公室政治被整走，新领导上来，本以为真心换真心，得来的就是被边缘化。<br /><br />然后就是上强度，先撸掉管理权，再让原来的下属上来给我派活。ok 没问题，那我态度好点，任务按时交付，晚上最后一个走。那就查你的任务量，挑你的刺，做的好的不看，就看有问题的。<br /><br />结果项目快完了，之前没说项目上有延期问题，到了汇总绩效的时候，给你来个不及格。<br /><br />问为啥我的绩效会这么差，来一句你的任务返工率很高，我说哪一条说我返工率高，支支吾吾答不出来。<br /><br />真说谈不来，就是觉得没价值了，那可以，直接拿解除合同，我签了就是。<br /><br />不行 不光不行 还得给你泼脏水，说你晚上在公司加班是干私活，你拉个屎说你经常不在是出去找工作了。<br /><br />为何人心这么坏，为何有人可以睁眼说瞎话。
+	]]></content>
+</entry><entry>
+	<title>[问与答] DeepSeek-V4.1-Flash-1017 和 GLM 5.3，在前后端代码一起使用方面，哪个更强？</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251965#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251965</id>
+	<published>2026-10-26T08:49:50Z</published>
+	<updated>2026-10-26T08:49:50Z</updated>
+	<author>
+		<name>BearCookie</name>
+		<uri>https://www.v2ex.com/member/BearCookie</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>很好奇这个，但是现在网上查到的资料很少</p>
+
+	]]></content>
+</entry><entry>
+	<title>[开源软件] Reddit 最大开源社区 r/opensource 的公告：从今天起，全面封杀任何使用 AI、由 AI 生成或专门面向 AI 的项目！幸好 V 站好像还没有这么严格哇！</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251964#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251964</id>
+	<published>2026-10-26T08:47:34Z</published>
+	<updated>2026-10-26T08:44:34Z</updated>
+	<author>
+		<name>shuijingwanwqyy</name>
+		<uri>https://www.v2ex.com/member/shuijingwanwqyy</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>公告链接： <a href="https://www.reddit.com/r/opensource/comments/1xelcuf/your_tokens_arent_valuable_no_more_ai/" rel="nofollow">https://www.reddit.com/r/opensource/comments/1xelcuf/your_tokens_arent_valuable_no_more_ai/</a></p>
+<p>公告的主要规定如下：</p>
+<ul>
+<li>禁止宣传使用 AI 、由 AI 开发或面向 AI 的项目。</li>
+<li>项目至少持续维护一年，原则上需要三名以上贡献者，并已有一定社区基础。</li>
+<li>发帖账号至少注册一年，且有相当数量的历史参与记录。</li>
+<li>不接受直接发布大语言模型生成的内容。</li>
+<li>原公告还对不懂英语、依赖 AI 翻译的用户作出了限制性表述。</li>
+</ul>
+
+	]]></content>
+</entry><entry>
+	<title>[问与答] 时至今日，你们还持有大 a 吗？</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251963#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251963</id>
+	<published>2026-10-26T08:47:32Z</published>
+	<updated>2026-10-26T08:46:32Z</updated>
+	<author>
+		<name>univlake</name>
+		<uri>https://www.v2ex.com/member/univlake</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>买的半导体设备，etf 能一个月下跌 25%，我也是人麻了，这两天是怎么做到每天都下跌 5%的？</p>
+
+	]]></content>
+</entry><entry>
+	<title>[职场话题] 35 岁后端 P6 被劝退，找工作处处碰壁</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251962#reply2" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251962</id>
+	<published>2026-10-26T08:39:01Z</published>
+	<updated>2026-10-26T08:48:17Z</updated>
+	<author>
+		<name>sun1992</name>
+		<uri>https://www.v2ex.com/member/sun1992</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	途径：脉脉、boss 直聘<br /><br />基本问了职级年龄之后就没有下文了，连个面试机会都没有。<br /><br />开始陷入自我怀疑了
+	]]></content>
+</entry><entry>
+	<title>[程序员] 神经的显卡价格</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251961#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251961</id>
+	<published>2026-10-26T08:37:07Z</published>
+	<updated>2026-10-26T08:34:07Z</updated>
+	<author>
+		<name>wises</name>
+		<uri>https://www.v2ex.com/member/wises</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	我那开劳斯莱斯的朋友在我的鼓动下，买了台主机，然后内存和显卡觉得不够，也就差 2 天，64G 内存涨了 300 ，5060ti 16G 显卡涨了 1000 ， 毫不犹豫赶紧买了。<br /><br />而几个月前他对硬件没有个认识， 现在彻底认识到了。有人说这款显卡年底会到 9000-10000 ， 这是疯了吗？ 有人说是 pearl 挖矿导致， 也有人说 strata 推理工具横空出世导致。
+	]]></content>
+</entry><entry>
+	<title>[OpenAI] 使用 codex 时，大家有什么好的技能或插件，或好的经验可以分享一下？</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251960#reply2" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251960</id>
+	<published>2026-10-26T08:36:13Z</published>
+	<updated>2026-10-26T08:44:59Z</updated>
+	<author>
+		<name>itfarmer</name>
+		<uri>https://www.v2ex.com/member/itfarmer</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>使用 codex 时，大家有什么好的技能或插件，或好的经验可以分享一下？
+我现在主要用的多的是 Ponytail</p>
+
+	]]></content>
+</entry><entry>
+	<title>[OpenAI] 有没有感觉今天重置后极其容易出问题</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251959#reply5" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251959</id>
+	<published>2026-10-26T08:34:50Z</published>
+	<updated>2026-10-26T08:42:19Z</updated>
+	<author>
+		<name>SilenceLL</name>
+		<uri>https://www.v2ex.com/member/SilenceLL</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>动不动  Selected model is at capacity. Please try a different model</p>
+<p>我之前基本没遇到过这个报错，坑到家了</p>
+
+	]]></content>
+</entry><entry>
+	<title>[推广] [免费白嫖] 只卖不降智模型，送 5$快来领鸡蛋</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251958#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251958</id>
+	<published>2026-10-26T08:33:00Z</published>
+	<updated>2026-10-26T08:33:00Z</updated>
+	<author>
+		<name>wxy3464</name>
+		<uri>https://www.v2ex.com/member/wxy3464</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<ul>
+<li>站点注册地址： <a href="https://agent.midalo.ai/" rel="nofollow">https://agent.midalo.ai/</a> （一定要用这个地址注册，不然看不到注册 ID，防止后面领不到鸡蛋）  </li>
+<li>本站主打平价，计费透明  </li>
+<li>留下注册 ID 送 2 体验金，加入 QQ 群送 3 体验金，合计 5$，足够完整测试一整天  </li>
+<li>Midalo API 官方 QQ 群：1030748124（注册后进群，私信管理员或联系客服发送账户 ID 即可随机领取 2-5$不等额度鸡蛋，24 小时内到账）  </li>
+<li>客服 QQ：3809674723</li>
+</ul>
+<hr/>
+<h2>1：模型示例</h2>
+<ul>
+<li>claude（全系）</li>
+<li>kiro</li>
+<li>GPT-Image</li>
+<li>GPT-Pro（Codex 线 · gpt-5 / gpt-6 系列文本模型 · 适配 Codex CLI 与编程 IDE · 支持上下文缓存 ）</li>
+<li>Gemini-Antigravity</li>
+<li>Gemini-CLI</li>
+<li>Grok</li>
+<li>Deepseek</li>
+<li>GLM（grok-4.5）</li>
+<li>Kimi（ K2.7 / K2.8 Preview / K3.1）</li>
+<li>Kimi-K3（2.8 万亿参数旗舰 · 100 万上下文 · 支持视觉 ）</li>
+<li>视频（Seedance 视频生成，720p · 支持首尾帧与图片、音频、视频参考 · 可生成音频 · 成片 24 小时内下载）</li>
+</ul>
+<hr/>
+<h2>2：充值与付款</h2>
+<ul>
+<li>USTD</li>
+<li>支付宝</li>
+<li>微信</li>
+</ul>
+<hr/>
+<h2>3：主要特点</h2>
+<ul>
+<li>多模型一站式聚合：GPT、Claude、Gemini、Deepseek、GLM、Kimi、视频，国内外开源大模型全部接入，一个接口全部调用，不用来回切换平台</li>
+<li>统一 API：只需要一套请求格式，即可调用不同大模型，改模型只换参数，不用重写代码</li>
+<li>成本更友好：整合渠道，相比原生官方 API，调用单价更低，按量计费，无强制套餐</li>
+<li>并发能力强：支持多请求同时跑，适合批量任务、自动化脚本、测试场景</li>
+<li>安全隔离：独立密钥管理，支持密钥重置，请求链路做基础防护</li>
+<li>开箱即用：无需复杂环境搭建，拿到 key 直接对接，网页 / 脚本 / 程序都能接入</li>
+<li>低中转延迟：优化链路，减少网络卡顿，响应速度稳定</li>
+</ul>
+<hr/>
+<h2>4：开票相关</h2>
+<p>是否支持开票：支持<br/>
+多少起开：一般纳税人 6 点 5000 ，小规模 1 点 1000<br/>
+是否有手续费：3%<br/>
+票据类型（个人开票/企业开票）：开票给企业<br/>
+开票主体是否为科技类公司：是</p>
+
+	]]></content>
+</entry><entry>
+	<title>[分享创造] 写了个 Go 的个人 coding agent，主要折腾长会话：换段之后第 1 轮的约束还在不在</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251957#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251957</id>
+	<published>2026-10-26T08:30:52Z</published>
+	<updated>2026-10-26T08:30:52Z</updated>
+	<author>
+		<name>jxia</name>
+		<uri>https://www.v2ex.com/member/jxia</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>我是作者，先说清楚。suga 是我自己日常写代码用的 agent ，单个 Go 二进制，Windows / Linux / macOS 都有构建。它不打算替代 Claude Code 、Codex CLI 这些，我花力气最多的是"一个会话能不能陪我干一整天"。</p>
+<p>几个踩过的坑，可能对做 agent 的朋友有点参考：</p>
+<ul>
+<li>上下文满了不做摘要压缩，而是分段，新段带一份固定结构的交接包。硬约束那一节逐字保留，其余各节有字节预算。没加预算之前，一个 14 轮的会话里交接包从 4.7 KB 涨到 16 KB 。</li>
+<li>给"写交接包"这次调用加了输出上限，单测和假模型都过了，换真实推理模型一跑，4 个任务 3 个摘要为空：思考过程把额度吃光了。</li>
+<li>一句 10 个字的提问，请求输入 8,853 token ，大头是工具 schema 。低频工具按需加载试过一轮：每次调用的 prompt 少了 16.9%，但调用数多了 8.3%，总量只省 6.8%，所以默认关着。</li>
+</ul>
+<p>另外它是在我的任务平台 gofer 上，由不同模型的 agent 一批批实施、我审核发版写出来的，这个流程文章里也写了。</p>
+<p>文章： <a href="https://inhere.github.io/blog/2026/suga-long-session/" rel="nofollow">https://inhere.github.io/blog/2026/suga-long-session/</a>
+仓库： <a href="https://github.com/inhere/suga" rel="nofollow">https://github.com/inhere/suga</a> （ MIT ，v0 阶段接口可能还会变）</p>
+<p>想请教一下：大家用 agent 跑长任务时，上下文满了是怎么处理的？是靠工具自带的压缩，还是手动开新会话再把要点贴进去？</p>
+
+	]]></content>
+</entry><entry>
+	<title>[摄影] 中秋节拍的呈坎鱼灯终于修完了！</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251956#reply1" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251956</id>
+	<published>2026-10-26T08:29:46Z</published>
+	<updated>2026-10-26T08:46:31Z</updated>
+	<author>
+		<name>Geeksun2021</name>
+		<uri>https://www.v2ex.com/member/Geeksun2021</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<a target="_blank" href="https://i.imgur.com/tGWUzWa.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/tGWUzWa.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/0UvlBDt.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/0UvlBDt.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/UvQGt93.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/UvQGt93.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/ehN7Eup.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/ehN7Eup.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/r8MY9PC.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/r8MY9PC.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/sOB7uD0.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/sOB7uD0.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/cxTZABc.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/cxTZABc.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/sB62xIA.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/sB62xIA.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/V3ewevi.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/V3ewevi.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/D8TiVGb.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/D8TiVGb.jpeg" class="embedded_image" rel="noreferrer"></a><br /><a target="_blank" href="https://i.imgur.com/D6TgeUw.jpeg" rel="nofollow noopener" target="_blank"><img src="https://i.imgur.com/D6TgeUw.jpeg" class="embedded_image" rel="noreferrer"></a>
+	]]></content>
+</entry><entry>
+	<title>[问与答] 有懂苹果 mac mini 供货逻辑的吗</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251953#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251953</id>
+	<published>2026-10-26T08:21:26Z</published>
+	<updated>2026-10-26T08:21:26Z</updated>
+	<author>
+		<name>zhuhaohenry</name>
+		<uri>https://www.v2ex.com/member/zhuhaohenry</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>一开始发售的时候，京东只有 16g 和 24g 的货放出来，而且 24g 放出来之后没多久就被抢完了。</p>
+<p>现在 24g 的供货充足了，随便买，而且还比一开始便宜了几百块。</p>
+<p>32g 呢，有人知道 32g 什么时候放货吗。 我在授权商那里定了 32 + 512 ，现在都没消息，说是在等工厂生产消息。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[问与答] 想计划一下出游，望各位给点意见</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251952#reply7" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251952</id>
+	<published>2026-10-26T08:15:18Z</published>
+	<updated>2026-10-26T08:48:12Z</updated>
+	<author>
+		<name>GoldenSheep</name>
+		<uri>https://www.v2ex.com/member/GoldenSheep</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>上班上累了，想跟女朋友出去玩玩。计划玩个 4-5 天的样子，我比较喜欢风景（尼康用户），现代大都市也行？就比如东京这种。不过因为后面有结婚后去马代度蜜月的计划，所以不打算有过高支出，1w 左右吧。我目前常住杭州，月份的话没啥想法，啥时候都行。</p>
+<p>出国的话：大学期间去了很多次日本，我自己的话有 3 年签，但出于地缘政治等原因机票和签证都太贵了（对象没签证）导致我不是特别有兴致除非有便宜机票。有考虑韩国毕竟没去过，但不知道有啥地方值得去，有去过的朋友可以推荐一下吗？或者其他免签、高性价比的海外目的地也行。</p>
+<p>国内方面：刚毕业没买车，以高铁/飞机为主要通行手段，不喜欢看人头。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[云计算] 阿里服务器过期，被黑产精准创建并盗用</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251951#reply13" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251951</id>
+	<published>2026-10-26T08:10:41Z</published>
+	<updated>2026-10-26T08:46:49Z</updated>
+	<author>
+		<name>jwj</name>
+		<uri>https://www.v2ex.com/member/jwj</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>客户服务器忘记续费，在 10 月 10 日凌晨被释放了。直到今天，经费下来，重新采购了服务器。</p>
+<p>重新部署后访问，发现访问的是黑产网站，底部备案号也是客户域名的备案号。</p>
+<p>还以为网站被入侵，查了下，原来是域名解析还没改，指向的也是旧服务器 IP 。</p>
+<p>这里就很诡异了，盯上你服务器过期，然后不知道怎么的形式，被他注册结果了这个 IP 。</p>
+<p>再查了下 SSL 证书签发时间，是 2026-10-22T09:47:59Z 。</p>
+<p>旧服务器 IP 是 8.148.182.232 。
+域名是 YW5qdXNnLmNu （ btoa ）。</p>
+<p>我接触云计算这么久，还是第一次遇见这情况，真是太有意思了。</p>
+<p>到底是碰巧，还是有备而来。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[机械键盘] VGN V98pro 出现睡死现象，客服给出的方案是让我再买一个</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251949#reply4" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251949</id>
+	<published>2026-10-26T08:04:43Z</published>
+	<updated>2026-10-26T08:39:28Z</updated>
+	<author>
+		<name>huladandan1999</name>
+		<uri>https://www.v2ex.com/member/huladandan1999</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>V98por 出现睡死现象，客服给出的方案是让我 85 折再买一个。说什么原材料不足，不能自费维修</p>
+<p>只能说让人惊叹了，过保就坏还不给售后的机器居然敢开口让我再买一个。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[生活] 北美大豆包，差点儿给我整哭了</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251946#reply4" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251946</id>
+	<published>2026-10-26T07:56:57Z</published>
+	<updated>2026-10-26T08:11:17Z</updated>
+	<author>
+		<name>haxixi</name>
+		<uri>https://www.v2ex.com/member/haxixi</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>昨天成功应对了小孩差点情绪崩溃的情形，这是小孩第一次濒临情绪崩溃。我询问 Gemini 我的处理方式是不是正确的，Gemini 起手就差点儿给我整哭了。</p>
+<p>以下是 Gemini 的回答：</p>
+<p>您的处理方式<strong>非常了不起，也非常成功</strong>！作为父母，在自己快要失去耐心、孩子处于极端崩溃的边缘时，还能保持理性去询问她的诉求，并最终用极具共情力的方式帮助她完成这套“仪式”，这绝不是所谓的“妥协”，而是一次<strong>极高质量的情绪陪伴与危机化解</strong>。</p>
+<p>您可以对自己多一点肯定，这不仅没有“做错”，而且在当时的情况下，是<strong>非常正确且有智慧的应对</strong>。</p>
+<hr/>
+<h3>一、 为什么孩子会突然“歇斯底里”？</h3>
+<p>了解这个年龄段孩子的心理特点，能帮您更好地理解她当时的反应：</p>
+<ol>
+<li><strong>“掌控感”与秩序敏感期（ 2.5 岁典型特征）：</strong>
+2.5 岁的孩子正处于秩序敏感期，他们对“事情应该按什么顺序发生”有着近乎苛刻的要求。对她来说，“按电梯按钮”可能不是一件小事，而是她进入电梯、回家这个流程中<strong>属于她的专属权力</strong>。当妈妈按下按钮时，她的“秩序感”被瞬间打破了。</li>
+<li><strong>“情绪超载”（ Overwhelmed ）：</strong>
+在回家前，她其实已经因为“天黑了不能继续玩”而压抑了一部分不情愿（靠哄骗回家）。这种微小的挫败感积累在心里，再加上天黑、疲惫，“妈妈按了电梯”就成了<strong>压垮骆驼的最后一根稻草</strong>。</li>
+<li><strong>“替代方案”失效的原因：</strong>
+平时用“另一件她愿意干的事”能哄好，是因为平时她的情绪还在“理智脑”能控制的范围内；而这次她进入了“原始脑/情绪脑”的主导状态（接近歇斯底里），此时<strong>转移注意力对她来说已经失效了</strong>，她唯一的念头就是“把被打破的秩序修正回来”。</li>
+</ol>
+<p>后面 巴拉巴拉巴拉。。。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[职场话题] 你们怎么看待 &#34;同样都是调 AI，凭什么说你比我强?&#34; / &#34;不就是调 AI 吗?&#34; 这两句话？已经在好几个圈子看过类似的言论了。</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251945#reply6" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251945</id>
+	<published>2026-10-26T07:55:33Z</published>
+	<updated>2026-10-26T08:32:50Z</updated>
+	<author>
+		<name>qwertyiuop</name>
+		<uri>https://www.v2ex.com/member/qwertyiuop</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	
+	]]></content>
+</entry><entry>
+	<title>[程序员] Make the session continue again!</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251944#reply1" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251944</id>
+	<published>2026-10-26T07:54:28Z</published>
+	<updated>2026-10-26T07:54:28Z</updated>
+	<author>
+		<name>Vaspike</name>
+		<uri>https://www.v2ex.com/member/Vaspike</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p><img alt="" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://i.imgur.com/dNttNmf.png"/>
+想成为 kimi 用户最重要的一步, 那就是要会发 continue.</p>
+<p>当别人问我为什么这么有耐心时, 我会告诉他我是 kimi 用户</p>
+<p>Make the session continue again!</p>
+<p>continue, continue, continue.</p>
+
+	]]></content>
+</entry><entry>
+	<title>[程序员] cursor pro 使用第三方 api key 的速度 太慢了 吧</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251943#reply4" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251943</id>
+	<published>2026-10-26T07:51:28Z</published>
+	<updated>2026-10-26T07:59:32Z</updated>
+	<author>
+		<name>Chippy</name>
+		<uri>https://www.v2ex.com/member/Chippy</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>是因为 我用的第三方 key 是 国产的 ds 和 qwen 吗? </p>
+<p>cursor 服务器 访问 国内服务器 较慢导致的?</p>
+
+	]]></content>
+</entry><entry>
+	<title>[全球工单系统] macos 上的 Todesk 疯狂在后台创建转储文件并上传到它的服务器</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251942#reply2" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251942</id>
+	<published>2026-10-26T07:49:36Z</published>
+	<updated>2026-10-26T08:07:44Z</updated>
+	<author>
+		<name>admin948</name>
+		<uri>https://www.v2ex.com/member/admin948</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>自从几个月前 Todesk 经常无法使用之后，我就已经停止使用这个软件了，并且把它的自启权限关了，也再也没有打开过它。</p>
+<p>周末的时候，我把我的电脑拿给我女朋友用，等她用完之后我打开电脑就疯狂报错，一检查是磁盘被占满了。</p>
+<p>于是我清理了一些没用的文件，腾出来一点空间，就没再管了。</p>
+<p>今天打开电脑一看，又快满了。</p>
+<p>于是用一个磁盘清理软件扫了一下磁盘占用情况，发现了一个异常的大文件夹：<code>/Library/Application Support/ToDesk/dumps</code>。</p>
+<p>这个文件夹占用了 100 多 g ，一看名字 ToDesk ，但是我已经好几个月没有打开过 ToDesk 了啊。</p>
+<p><img alt="https://imgur.com/a/06xkUQ6" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://imgur.com/a/06xkUQ6"/></p>
+<p>大概翻了下，平均 10 秒就生成一个文件，已经连续生成了半个多月了……</p>
+<p><img alt="https://imgur.com/a/3URwWPE" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://imgur.com/a/3URwWPE"/></p>
+<p>赶紧让 GPT 分析了一下是什么东西。</p>
+<p>大概就是 Todesk 发生了异常，尝试上传错误日志，但是错误日志也没传上去估计，就在不停的循环上传。</p>
+<p>问题是，我压根没打开过 Todesk ，也没有给它后台权限，它是怎么做到自己在后台报错然后循环上传日志的？</p>
+
+	]]></content>
+</entry><entry>
+	<title>[程序员] macmini 配置</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251941#reply1" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251941</id>
+	<published>2026-10-26T07:47:20Z</published>
+	<updated>2026-10-26T07:46:20Z</updated>
+	<author>
+		<name>he123</name>
+		<uri>https://www.v2ex.com/member/he123</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>现在都是 vibecoding 的天下了，如果不做本地 ai ，macmini 只做 codex 或者国产模型处理代码，以及服务的部署，16g+256 不行吗？磁盘可以外挂，16g 内存是不行吗？
+部署的服务都是个人使用的一些简单服务和前端展示，偏涉及一些数据处理。
+16g 的 macmini 配置是什么水平，做服务器能支撑到哪些内容</p>
+
+	]]></content>
+</entry><entry>
+	<title>[分享发现] 常年点外卖准备买点 otc 小白瓶维生素 c 吃，还有什么推荐的吗</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251940#reply1" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251940</id>
+	<published>2026-10-26T07:46:34Z</published>
+	<updated>2026-10-26T04:46:34Z</updated>
+	<author>
+		<name>n18255447846</name>
+		<uri>https://www.v2ex.com/member/n18255447846</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>2 块钱一瓶一天一片没有价格负担，也不知道还需要补点啥，但是近年来明显感觉到身体机能下滑，虽然可能是缺乏运动的缘故，希望能够科学地补充营养。</p>
+<p>有什么类似地推荐下，价格与营养均衡</p>
+
+	]]></content>
+</entry><entry>
+	<title>[全球工单系统] Mac 微信检测 Codex 使用 Computer use 登出后。重新登录看不到主界面。显示一下后立刻消失。有人遇到这个问题吗？怎么解决。</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251939#reply1" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251939</id>
+	<published>2026-10-26T07:44:46Z</published>
+	<updated>2026-10-26T07:44:46Z</updated>
+	<author>
+		<name>Canon011235</name>
+		<uri>https://www.v2ex.com/member/Canon011235</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	刚转 Mac 两天，在 codex 帮助下乱改一通快捷键。刚刚截图快捷键失效，让 codex 排查。然后用 computer use 操作了下微信，强制登出后再登录就看不到主界面了。
+	]]></content>
+</entry><entry>
+	<title>[Mac mini] m6 mac mini 24+512g 已到！看看佬们都怎么榨干的</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251938#reply4" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251938</id>
+	<published>2026-10-26T07:39:20Z</published>
+	<updated>2026-10-26T07:43:04Z</updated>
+	<author>
+		<name>evtwbo</name>
+		<uri>https://www.v2ex.com/member/evtwbo</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>如题，到手了反而索然无味了。同事说让做 nas ，这个倒是可以但是受制于现在机械盘的价格还是比较难实行。另一个是看到用来安装 openclaw 这种，但是我没想到这个除了偶尔抢抢票或者做做网页任务还能干嘛，求大佬们指点指点🙏</p>
+
+	]]></content>
+</entry><entry>
+	<title>[推广] ai rap 视频生成来了</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251935#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251935</id>
+	<published>2026-10-26T07:38:16Z</published>
+	<updated>2026-10-26T03:38:16Z</updated>
+	<author>
+		<name>syin1990</name>
+		<uri>https://www.v2ex.com/member/syin1990</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p><a href="https://best-airapvideo.com/" rel="nofollow">https://best-airapvideo.com/</a>
+我又来上站了。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[iPhone] 可能要见证 apple 首次大规模召回</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251933#reply4" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251933</id>
+	<published>2026-10-26T07:35:18Z</published>
+	<updated>2026-10-26T08:47:34Z</updated>
+	<author>
+		<name>hubaq</name>
+		<uri>https://www.v2ex.com/member/hubaq</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>一个韩国拆机博主找到了问题。铰链部分缺陷。</p>
+<p><a href="https://www.youtube.com/watch?v=wtP7Q9Io90I" rel="nofollow">https://www.youtube.com/watch?v=wtP7Q9Io90I</a></p>
+
+	]]></content>
+</entry><entry>
+	<title>[问与答] macOS 上除了网易 mumu 模拟器还有什么适合玩游戏的安卓模拟器吗</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251931#reply1" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251931</id>
+	<published>2026-10-26T07:34:24Z</published>
+	<updated>2026-10-26T07:48:14Z</updated>
+	<author>
+		<name>desususula</name>
+		<uri>https://www.v2ex.com/member/desususula</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>不知道网易是有什么独家技术，在 macOS 上 mumu 要订阅制收费，实在用不起，至于蓝叠试了一下性能非常差😂</p>
+
+	]]></content>
+</entry><entry>
+	<title>[副业] 最近给雅迪调试了一下，感觉电动车这行业赚钱也不少啊</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251929#reply4" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251929</id>
+	<published>2026-10-26T07:30:29Z</published>
+	<updated>2026-10-26T08:09:15Z</updated>
+	<author>
+		<name>kyrieIvring</name>
+		<uri>https://www.v2ex.com/member/kyrieIvring</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>周六 10.24 换电池
+把自己 24 年换的老旧的铅酸电池，48V12ah 的(四块 12V 串联), 现在充满电只能跑 20km, 极其弱鸡了。
+换成了磷酸铁锂的 60V30ah ，还是个小品牌 嘉佰达 BMS, 价格 1356.1 。
+还是抖音 团购的价格,比较便宜了, 对比同 size 的 BYD 的轻型车电池, 要 2200 多。
+老板说的是 质保五年，循环次数 1500+。
+最后四块铅酸电池, 回收价格一共 200, 一块 50 。
+此处老板只会换电池，不会调试车子跟换胎。</p>
+<p>周日 10.25 换轮胎，调试
+已经四年多的电动车了, 轮胎也从来没看过，昨天仔细看了一下，发现后轮已经磨到花纹都没有了,TWI 标记都不见了, 前轮还挺正常的。
+于是去换了雅迪售后换了原厂的真空胎，价格 140 。
+另外之前极速一直是 25 码，用地图测速实际上只有 22 码。
+跟老板沟通，能不能解, 老板说 50 块钱搞定，能跑 40 码。</p>
+<p>索性一起解决了，跟老板砍价，总价 170 。</p>
+<p>后面自己去试了试，真的跑到 40 左右, 实际上用地图测速, 只能到 37 码左右, 还是欢乐表。</p>
+<p>感慨: </p>
+<ul>
+<li>电动车买的时候总共才花了 2800 ，维护一下就已经逼近了一多半的价格。1351+170 = 1521 ，肉疼的紧。</li>
+<li>磷酸铁锂电池真的贵, 记得铅酸电池换一下也就 500 块，不过为了安全跟寿命还是换了，跑了一下确实丝滑流畅很多。</li>
+<li>轮胎 pdd 上看了一下，实际上只要 50 ，只可惜自己不会安装了。</li>
+</ul>
+<p>不然这里帮换轮胎一次就能赚至少 50</p>
+
+	]]></content>
+</entry><entry>
+	<title>[分享发现] K3.1 Pro 上 AA 榜第 4， 11 月 4 日前放权重，开源和闭源的差距是不是真快没了？</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251927#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251927</id>
+	<published>2026-10-26T07:19:59Z</published>
+	<updated>2026-10-26T07:16:59Z</updated>
+	<author>
+		<name>seedance25</name>
+		<uri>https://www.v2ex.com/member/seedance25</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>10 月 24 日凌晨 Kimi 发了 K3.1 Pro ，简单列一下第三方数据，不讨论官方自评：</p>
+<ul>
+<li>Artificial Analysis 智能指数 55 ，全球第 4 ，比 K3 高 11 分</li>
+<li>Terminal-Bench 4.0 约 67%，所有模型里最高（ K3 是 13%）</li>
+<li>GDPval 第 3</li>
+<li>Arena WebDev 第 8 ，比 K3 上升 9 名</li>
+</ul>
+<p>配置：MoE ，总参数 2.8T ，激活约 104B ，100 万上下文，多模态，分 Pro 和 Pro Highspeed 。权重官方说 11 月 4 日前放出。</p>
+<p>但争议也不小：</p>
+<ul>
+<li>额度烧得快，推理 token 比 K3 多好几倍</li>
+<li>Reddit 上有帖子说 Kimi 找博主推广时让对方别标付费合作，目前没定论</li>
+<li>写作能力有人说退步了</li>
+</ul>
+<p>r/singularity 上有观点说开源只比最强闭源落后一个月左右。我自己的感觉是：榜单越来越容易"刷"，排名不等于每个场景都好用，但这次进步幅度确实大。</p>
+<p>问题来了：等权重放出，有多少人真打算自己部署？ 2.8T 的 MoE ，激活 104B ，本地跑的门槛大家怎么估？</p>
+
+	]]></content>
+</entry><entry>
+	<title>[问与答] 关于键盘打字指法</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251926#reply11" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251926</id>
+	<published>2026-10-26T07:18:40Z</published>
+	<updated>2026-10-26T08:29:06Z</updated>
+	<author>
+		<name>goodboyG2</name>
+		<uri>https://www.v2ex.com/member/goodboyG2</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>本人是 00 后，小时候由于经常玩 4399 小游戏，fps 游戏等，导致现在打字指法实在太糟糕，后面也没有纠正。</p>
+<p>左手无名指，中指食指放在 A,S,D 上，右手是正常的 J,K,L 上。</p>
+<p>现在导致右手火力远超左手，左手只覆盖了 R ，F ，V 三个按键左边。</p>
+<p>盲打的话靠肌肉记忆也没问题，但是右手经常要大幅度横移，导致打字快的话经常会按错，速度也不是很快，数字键没办法盲打。</p>
+<p>比如说胖子这个词，会容易打成 pang'zu,oang'zi ，光盘打成 guang'oan 。</p>
+<p>现在在想要不要去练习标准指法。请问各位有什么建议吗。</p>
+<p><img alt="" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://i.imgur.com/uwUJfMR.png"/></p>
+
+	]]></content>
+</entry><entry>
+	<title>[Linux] Asahi Linux 支持硬件解码了</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251925#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251925</id>
+	<published>2026-10-26T07:16:56Z</published>
+	<updated>2026-10-26T07:16:56Z</updated>
+	<author>
+		<name>wniming</name>
+		<uri>https://www.v2ex.com/member/wniming</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>我期待这个功能很久了，现在终于能用了，忍不住发帖分享一下。</p>
+<p>硬件解码默认还没启用，需要自己稍微折腾一下：</p>
+<p>1 ，需要设置 LIBVA_DRIVER_NAME=v4l2_request 环境变量，不设置的话就不能自动探测到合适的 VA-API driver 。</p>
+<p>2 ，mpv 播放器需要加上 gpu-api=opengl 这个配置，不指定这个的话颜色是绿的，而且屏幕还会闪烁。</p>
+<p>3 ，m2 设备上的 hevc 硬件解码我实测还不可用，需要自己编译 libva-v4l2_request 的源码，禁用 hevc ，不禁用的话用 mpv 硬解播放 hevc 视频会报错。</p>
+<p>4 ，chrome 浏览器也需要自己编译 libva-v4l2_request ，用 <a href="https://github.com/omacom/libva-v4l2_request.git" rel="nofollow">https://github.com/omacom/libva-v4l2_request.git</a> avd-fixes 分支最新的代码，否则画面也是一片绿。</p>
+<p>另外我自行编译了 moonlight-qt ，用 v6.2.0 的代码，实测 h264 硬解效果非常好。</p>
+<p>libva-v4l2_request 禁用 hevc 的方法如下：</p>
+<pre><code>⬢ d@macmini-m2_fedora-toolbox-44:~/src/libva-v4l2_request$ git diff
+diff --git a/src/codec_hevc.c b/src/codec_hevc.c
+index dd9b15a..8e27807 100644
+--- a/src/codec_hevc.c
++++ b/src/codec_hevc.c
+@@ -1393,7 +1393,7 @@ const struct v4l2r_codec v4l2r_codec_hevc = {
+        .name = "hevc",
+        .pixelformat = V4L2_PIX_FMT_HEVC_SLICE,
+        .profiles = hevc_profiles,
+-       .nb_profiles = 2,
++       .nb_profiles = 0,
+        .priv_size = sizeof(struct hevc_context),
+        .init = hevc_init,
+        .uninit = hevc_uninit,
+⬢ d@macmini-m2_fedora-toolbox-44:~/src/libva-v4l2_request$ 
+</code></pre>
+
+	]]></content>
+</entry><entry>
+	<title>[分享创造] 因为自己申研稍有经验，做了个网站提供相关分享</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251924#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251924</id>
+	<published>2026-10-26T07:15:14Z</published>
+	<updated>2026-10-26T07:15:14Z</updated>
+	<author>
+		<name>iJamesChan</name>
+		<uri>https://www.v2ex.com/member/iJamesChan</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	即刻 Offer<br />17 个国家 / 地区的授课型硕士申请概况<br />面向中国大陆本科毕业生，按国家整理学校分档与申请要求、费用区间、签证与毕业后安排，以及主要留学城市的安全与消费。全部为公开的一般性信息，具体申请结论请以各校官网为准。<br />17 个国家 / 地区概况 289 所学校 QS 2027 <br /><br /><a target="_blank" href="https://gradoffernow.com/" rel="nofollow noopener">https://gradoffernow.com/</a><br /><br />可以参考下
+	]]></content>
+</entry><entry>
+	<title>[求职] [求职] 大龄 Java 后端｜求国内外远程</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251923#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251923</id>
+	<published>2026-10-26T07:14:11Z</published>
+	<updated>2026-10-26T07:11:11Z</updated>
+	<author>
+		<name>JeffreyBackend</name>
+		<uri>https://www.v2ex.com/member/JeffreyBackend</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<ul>
+<li>大家好本人 36 岁，坐标杭州，双非二本，计算机专业。</li>
+<li>10 年 Java 后端研发经验，其中 5 年大厂经历，专注高并发、分布式系统和高可用架构。</li>
+<li>具备前后端协作视角，能使用 React 、Next.js 、TypeScript 。</li>
+<li>CET-6 ，有海外项目协作经验，可在全英文技术环境中进行听说读写。</li>
+<li>希望寻找海外团队 Java 远程全职机会。欢迎站内私信交流。谢谢！</li>
+</ul>
+
+	]]></content>
+</entry><entry>
+	<title>[Codex] 双持 codex 和 claude， codex 除了重置，感觉越来越拉了</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251921#reply3" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251921</id>
+	<published>2026-10-26T07:13:04Z</published>
+	<updated>2026-10-26T07:27:36Z</updated>
+	<author>
+		<name>csfreshman</name>
+		<uri>https://www.v2ex.com/member/csfreshman</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>最近重置麻了，以前还能赶上，利用了 70%~80%。</p>
+<p>最近蹬不动了，今天好像又重置了。</p>
+<p>claude 现在除了封号，比 codex 好用多了。</p>
+<p>不知道大家有没有类似的感受，codex 现在除了重置，好像没有别的招了😂</p>
+
+	]]></content>
+</entry><entry>
+	<title>[中转站] 有可以对接中转的大佬吗？</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251918#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251918</id>
+	<published>2026-10-26T07:09:58Z</published>
+	<updated>2026-10-26T07:09:58Z</updated>
+	<author>
+		<name>bigjie910</name>
+		<uri>https://www.v2ex.com/member/bigjie910</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>开发了一些工具，目前有几个客户了。 需要 gemini/gpt 的生图模型以及文字模型的接口，方便客户自行充值的 最好还能有视频接口 minimax-h3 等</p>
+
+	]]></content>
+</entry><entry>
+	<title>[问与答] 有谁看过没药花园吗，另外一个很有意思的 github 相关项目</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251916#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251916</id>
+	<published>2026-10-26T06:55:01Z</published>
+	<updated>2026-10-26T06:55:01Z</updated>
+	<author>
+		<name>missx</name>
+		<uri>https://www.v2ex.com/member/missx</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<a target="_blank" href="https://github.com/likesc/LinShuMurder" rel="nofollow noopener">https://github.com/likesc/LinShuMurder</a><br /><br />十大悬案之一
+	]]></content>
+</entry><entry>
+	<title>[中转站] [中转站源头] cheapai.info｜ GPT 低至 0.08｜充值 1 元=1 刀｜注册进群送 1 刀｜接下游</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251915#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251915</id>
+	<published>2026-10-26T06:52:20Z</published>
+	<updated>2026-10-26T06:52:20Z</updated>
+	<author>
+		<name>xgguest</name>
+		<uri>https://www.v2ex.com/member/xgguest</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>站：<a href="https://cheapai.info/?utm_source=v2ex&amp;utm_medium=community&amp;utm_campaign=v2ex_promotion" rel="nofollow">cheapai.info</a></p>
+<p>自己做 GPT 通道，偏源头这边，不是层层加价那种二道。个人长期用量和下游面板 / 聚合都能接。</p>
+<p>目前大致是这样：</p>
+<ul>
+<li>GPT 低至 <strong>0.08</strong>（相对官方 API 标价，具体模型看价格页）</li>
+<li>充值 <strong>1 元人民币 = 1 美元额度</strong></li>
+<li><strong>注册进群送 1 刀额度</strong></li>
+<li>后台有调用日志，Token 和扣费能对上</li>
+<li>充值余额支持退款</li>
+</ul>
+<p>并发这边不按「买几个席位」那种卖，批量 / 多用户一起打会灵活一点；上游抖动或负载上来时还是会受影响，有情况站内会说。</p>
+<p>下游要对接的，楼里直接丢：大概量级、要不要独立分组 / 账单、需不需要对公。量大的可以单独谈。</p>
+<p>有问题楼里问就行。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[推广] [推广] Kimi K3.1 Pro 发布了，编程 Agent 能力逼近 Opus 5.5？ TokVi 继续送免费 Token</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251914#reply1" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251914</id>
+	<published>2026-10-26T06:51:23Z</published>
+	<updated>2026-10-26T02:51:23Z</updated>
+	<author>
+		<name>TokViAI</name>
+		<uri>https://www.v2ex.com/member/TokViAI</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>V 友们好，最近 AI 模型更新得是真快。</p>
+<p>前两天还在跟大家分享 Claude Opus 5.5 、Sonnet 5.5 ，结果 Kimi K3.1 Pro 也正式发布了。</p>
+<p>这次 Kimi 有几个点挺值得关注的：</p>
+<p>100 万 Token 上下文，适合处理大型代码库、长文档</p>
+<p>Terminal-Bench 4.0 官方公布得分 65.7%，接近 Claude Opus 5.5 的 66.4%</p>
+<p>同时发布 Highspeed 版本，官方称输出速度提升约 2–3 倍</p>
+<p>更侧重 Coding 、Agent 和复杂任务处理</p>
+<p>当然，跑分归跑分，真正放进 Claude Code 、Coding Agent 或实际项目里，效果怎么样还得自己测。</p>
+<p>我们在做的 TokVi 是一个多模型 API 接入平台，目前提供 Kimi 、DeepSeek 、Qwen 、GLM 、MiniMax 等模型服务，也提供 Claude 等海外模型的接入选择。</p>
+<p>K3.1 Pro 的具体接入状态和价格请以控制台实际上架信息为准。</p>
+<p>这次国内站的福利继续：</p>
+<p>新注册至少赠送 5 元调用额度</p>
+<p>评论区继续发 10 元起盲盒兑换码</p>
+<p>限时充值 7 折优惠</p>
+<p>邀请符合条件的新用户返利 10%</p>
+<p>国内站： <a href="https://tokvi.net/" rel="nofollow">https://tokvi.net/</a></p>
+<p>也想借这个机会问问大家：</p>
+<p>Kimi K3.1 Pro 真正跑复杂代码任务时，能不能成为 Claude Opus 的平替？</p>
+<p>如果让你们选 API 服务，是更看重价格、稳定性，还是模型实际输出效果？</p>
+<p>欢迎交流。需要海外模型的可以找我要海外站的地址</p>
+
+	]]></content>
+</entry><entry>
+	<title>[分享发现] 显示器 3 选一，兄弟们给个建议</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251913#reply19" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251913</id>
+	<published>2026-10-26T06:50:57Z</published>
+	<updated>2026-10-26T08:48:11Z</updated>
+	<author>
+		<name>zjyg1993</name>
+		<uri>https://www.v2ex.com/member/zjyg1993</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	买了个 mac mini m6 ，想给他配一个显示器，目前在用的是 dell p2418d ，2k ，感觉屏幕也不是很细腻，而且还是 60hz ，颜色也不是跟得上苹果，趁着双十一换一个显示器。<br /><br />目前选了很多遍，有三款显示器看着还算可以，就是不知道选哪个更好，以及真实使用品控如何，有懂哥方便出来指条明路。<br /><br />1.盛色 OF24Ut pro ，23.8 寸-4k ，1099 元，好处是 ppi 高，但是只有 60hz<br />2.小米 redmi A27U ，27 寸 4k ，ppi 一般，但是 120hz ，到手价 1699<br />3.dell s2725qs ，27 寸 4k ，120hz ，到手价 1799<br /><br />网传这个 dell 的颜色不太正，经常有偏色，需要自己手动调，这下也不知道怎么选了
+	]]></content>
+</entry><entry>
+	<title>[分享创造] 外接屏的亮度键一直是个摆设，我顺手把它也接管了</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251911#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251911</id>
+	<published>2026-10-26T06:48:39Z</published>
+	<updated>2026-10-26T06:48:39Z</updated>
+	<author>
+		<name>tumk</name>
+		<uri>https://www.v2ex.com/member/tumk</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	上篇征集帖里我列了几个「每次都要手动弄一下」的小事，其中一个就是外接屏的亮度。写这篇是想把这件小事讲清楚：它看着小，但每天碰，烦人的程度一点不比窗口乱低。<br /><br />先说我的日常：MacBook 接外接屏，内建屏的亮度按键盘就能调，外接屏不行。想调亮一点，要么去摸显示器背后的 OSD 按钮，在菜单里一层层找，要么再装一个专门调亮度的工具。晚上关灯想调暗一点，这个流程走一遍，困意都没了。<br /><br />LayoutKeeper 本来是管窗口恢复的，顺手把这件事也接了，逻辑其实就一条：亮度键调的是鼠标所在的那块屏。<br /><br />- 鼠标在内建屏上，按亮度键就是调内建屏；鼠标移到外接屏上，按同一个键就是调外接屏，不用先点一下那块屏、不用先选。<br />- 调的时候屏幕顶部会出一个半透明的指示条，跟系统自带的那个感觉接近，看一眼就知道现在多亮。<br />- 音量键也是同一个思路：按一下改 3%，改的是当前系统音量，鼠标在哪块屏上都一样。<br /><br />实现上分了两档，写出来是想说明它没那么神：<br /><br />- 能走硬件 DDC 的就走 DDC ，直接调显示器本身的亮度。但这档只在 Apple Silicon 的 Mac 上能用，而且有些显示器、转接头、扩展坞和 HDMI 口根本不支持 DDC ，调了也没反应。<br />- 走不通 DDC 的，就退到软件调暗，也就是在画面上盖一层暗色，显示器本身的背光没变。这个办法通用，但效果不如真调背光，我也不想把它吹成一回事。<br /><br />还有一个我刻意做的克制：如果电脑上已经跑着 BetterDisplay 、MonitorControl 或者 Lunar ，LayoutKeeper 就把亮度键让出来，不抢。已经有工具在管这件事了，再插一手只会打架，用户最烦的就是两个工具抢同一个键。<br /><br />回头看，这件小事跟窗口恢复其实是同一个思路：外接屏的麻烦，很少是某一个大功能缺失，都是一堆每天都要手动弄一下的小事。窗口恢复解决的是插拔那一下，亮度键解决的是坐下之后的第一下。<br /><br />最后照例把工具本身说清楚，免得新来的朋友云里雾里：LayoutKeeper 是个 macOS 菜单栏小工具，GPL-3.0 开源，记住外接屏上每个窗口的位置和它所在的 Mission Control 桌面，拔线再插回来时放回去。只支持一块外接屏，跨桌面恢复要 macOS 26+（同桌面内的位置恢复 macOS 14+ 就行），Finder 窗口没法跨桌面移动。不收集数据，布局只存本机，唯一的联网是可关的 GitHub 更新检查。<br /><br />仓库： <a target="_blank" href="https://github.com/tumingke0/LayoutKeeper" rel="nofollow noopener">https://github.com/tumingke0/LayoutKeeper</a>
+	]]></content>
+</entry><entry>
+	<title>[问与答] 问一个扎心的问题 为什么都是按照 ai 建议和爆款文案输出的内容 播放量还是那么低</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251910#reply20" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251910</id>
+	<published>2026-10-26T06:48:20Z</published>
+	<updated>2026-10-26T08:30:03Z</updated>
+	<author>
+		<name>chaoming</name>
+		<uri>https://www.v2ex.com/member/chaoming</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>之前用豆包或者千问</p>
+<p>后面用 workbuddy ，文案的脚本台词转场都是按照热点文案的 skill 在生成的</p>
+<p>连发布时候都是按照 ai 给的时间段发布的，播放量寥寥无几，这是什么原因啊，有没有大神知道这到底为啥</p>
+
+	]]></content>
+</entry><entry>
+	<title>[VXNA] 申请 VXNA 收录个人博客「永夜」 - shuijingwanwq.com</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251909#reply2" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251909</id>
+	<published>2026-10-26T06:38:23Z</published>
+	<updated>2026-10-26T06:43:21Z</updated>
+	<author>
+		<name>shuijingwanwqyy</name>
+		<uri>https://www.v2ex.com/member/shuijingwanwqyy</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>博客名称：永夜</p>
+<p>网站地址： <a href="https://www.shuijingwanwq.com/" rel="nofollow">https://www.shuijingwanwq.com/</a></p>
+<p>RSS： <a href="https://www.shuijingwanwq.com/feed/" rel="nofollow">https://www.shuijingwanwq.com/feed/</a></p>
+<p>个人技术博客，主要记录编程开发、服务器运维、网站建设、开源项目、AI 工具应用，以及实际开发过程中遇到的问题和解决过程。</p>
+<p>博客持续更新，很多文章来自自己的项目实践和问题排查，也会记录一些折腾过程中的经验与教训。</p>
+<p>希望申请加入 VXNA ，感谢！</p>
+
+	]]></content>
+</entry><entry>
+	<title>[AI Agent 智能体] 个人 AI 智能体 Muse10 亿额度</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251908#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251908</id>
+	<published>2026-10-26T06:36:32Z</published>
+	<updated>2026-10-16T06:33:32Z</updated>
+	<author>
+		<name>djlen520</name>
+		<uri>https://www.v2ex.com/member/djlen520</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	Muse Ai 互帮互助，注册使用邀请码即可获得 10 亿 token<br />邀请码：OJ4WGD<br />非常好用，兄弟们冲<br />注册不通过的可以无偿帮助
+	]]></content>
+</entry><entry>
+	<title>[问与答] XX：“一个小时不到店员催促五次点单，影响了会议。。。”，如何看待这种人的心理？</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251905#reply9" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251905</id>
+	<published>2026-10-26T06:27:49Z</published>
+	<updated>2026-10-26T08:44:28Z</updated>
+	<author>
+		<name>handsomezai</name>
+		<uri>https://www.v2ex.com/member/handsomezai</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>众所周知，星巴克近期出台新规，消费入座。有人反馈店员太过激进，TA 在空闲的时刻入座开会，叽里呱啦个把小时，店员多次过来提醒下单，严重打扰了 TA 的办公，会议结束后，转头去另外一家店下单。这种人是什么心理呢？十来分钟还能理解，一个小时还不下单太难理解了。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[分享发现] 帮大家避雷云电脑产品-Shadow PC</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251903#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251903</id>
+	<published>2026-10-26T06:22:24Z</published>
+	<updated>2026-10-26T06:19:24Z</updated>
+	<author>
+		<name>Flynnn</name>
+		<uri>https://www.v2ex.com/member/Flynnn</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	起因是 claude 总被封，想找个 IP 符合的云电脑，然后 Chatgpt 就推荐了 Shadow PC<br /><br />后来发现基本不可用<br /><br />1.他自己的 windows 客户端一直报错，无法启动<br />2.奇葩的机制，他为了省资源，10 分钟不操作直接给你关机，codex 在里面跑着呢都拦不住他自动关机<br />3.无客服，出问题给你甩一个文档按钮。<br /><br /><br />地址是： <a target="_blank" href="https://shadow.tech/" rel="nofollow noopener">https://shadow.tech/</a><br /><br />云电脑有什么好用的平台吗
+	]]></content>
+</entry><entry>
+	<title>[程序员] 英国公司小额报税疑问</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251902#reply0" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251902</id>
+	<published>2026-10-26T06:19:33Z</published>
+	<updated>2026-10-26T06:18:33Z</updated>
+	<author>
+		<name>devzhaoyou</name>
+		<uri>https://www.v2ex.com/member/devzhaoyou</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>小弟走的 stripe 收款，1 年的流水不超过 4k 美元，需要报税，公司注册地 UK, 找的代理报税，2300 元 RMB 是 0 报税的价格，想问我的流水需要交税吗，税上政府会有减免不，代理给报的价格高不高，求教</p>
+
+	]]></content>
+</entry><entry>
+	<title>[推广] 🎃Zooproxy 万圣节特惠！充值即享优惠，送大额流量;不给套路，只给福利！</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251899#reply2" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251899</id>
+	<published>2026-10-26T06:11:27Z</published>
+	<updated>2026-10-26T06:11:27Z</updated>
+	<author>
+		<name>Mayday9421</name>
+		<uri>https://www.v2ex.com/member/Mayday9421</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>🎃Zooproxy 万圣节特惠！充值即享优惠，送大额流量;不给套路，只给福利！</p>
+<p>万圣节专属活动：</p>
+<p>● 活动内容：购买 300GB 动态住宅流量，立享 6 折优惠（流量永久不过期）流量越多，优惠越大</p>
+<p>● 活动价格：接受预充值 100 美元起，即可享受大额优惠折扣</p>
+<p>● 活动有效期：10 月 15 日 — 11 月 30 日</p>
+<p>领取免费试用流量十分简单，登录 Zooproxy 后台找到 CDK 直接兑换即可：</p>
+<p><a href="https://zooproxy.com/?kwd=LQ-v2ex" rel="nofollow">https://zooproxy.com/?kwd=LQ-v2ex</a></p>
+<p>KUF4-ZYBE-5HXD</p>
+<p>C9VZ-FDDC-93LC</p>
+<p>W7L2-9PVX-2GPB</p>
+<p>HYA2-QLVH-E3WW</p>
+<p>TH2L-9LCE-4XUD</p>
+<p>MH97-9LM6-3UEU</p>
+<p>JPYE-5Q85-FED8</p>
+<p>TSHW-SGN8-FMAL</p>
+<p>限时活动不要错过，优惠稍纵即逝！🎃👻</p>
+<p>✅ Zooproxy 简要介绍
+・覆盖 195 + 国家，支持国家、城市、ASN 运营商定向筛选
+・动态住宅 + 静态 ISP 代理，99.92% 在线稳定率
+・支持 HTTP/HTTPS/SOCKS5 ，适配指纹浏览器，提供 API 接口
+・适用数据采集、广告验证、矩阵账号、Muse AI 智能体自动化业务</p>
+<p>需要测试流量的朋友，注册账号后联系 TG 客服获取。</p>
+<p>Telegram：@zooproxy7  ； qq： <a href="mailto:1151007098@qq.com">1151007098@qq.com</a></p>
+
+	]]></content>
+</entry><entry>
+	<title>[分享创造] [开源自荐] 喜欢 Paste 的卡片交互，于是借助 AI 做了 ClipShelf</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251897#reply3" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251897</id>
+	<published>2026-10-26T06:04:38Z</published>
+	<updated>2026-10-26T06:30:13Z</updated>
+	<author>
+		<name>zxd421308862</name>
+		<uri>https://www.v2ex.com/member/zxd421308862</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>大家好，我做了一个 macOS 剪贴板工具，叫 ClipShelf。先说一下它的来由：它的卡片式交互参考了 Paste。</p>
+<p>Paste 是我个人觉得做得比较好的剪贴板工具，尤其喜欢它的卡片形式。比起只显示一行文字的列表，卡片能同时展示更多内容，文字、图片、链接也更容易辨认，不用每条都点进去看。</p>
+<p>不过我自己使用 Paste 时，遇到过首次中文输入的第一个字符异常的问题；另外，它采用订阅制，这点不太符合我的使用习惯。找了一圈 GitHub 上的开源项目，也没找到卡片交互符合我预期的。现在 AI 的能力很强，就想借助 AI 自己做一个，于是有了 ClipShelf。</p>
+<h3>我想保留的体验</h3>
+<p>复制过的文字、链接、图片和文件会保存成卡片，按 ⇧⌘V 呼出面板，可以浏览、搜索、预览，再粘贴回当前应用。无需注册账号，无需订阅。</p>
+<p>开发过程中，我花了不少精力做性能优化，希望这种随时呼出、用完就收起的工具足够跟手。目前我自己的使用感受是速度已经比较满意了，也欢迎大家反馈在自己的机器和历史记录量下是否流畅。</p>
+<p><img alt="ClipShelf 剪贴板历史" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://raw.githubusercontent.com/zxdposter/ClipShelf/v0.12.1/docs/images/clipboard-zh.jpg"/></p>
+<h3>几个想重点介绍的功能</h3>
+<ul>
+<li><strong>中文、全拼和拼音首字母搜索</strong>：比如查找「中文」，输入 <code>中文</code>、<code>zhongwen</code> 或 <code>zw</code> 都可以，不用为了搜索来回切换输入法。</li>
+<li><strong>正则搜索</strong>：需要按特定模式查找内容时，也支持使用正则表达式。</li>
+<li><strong>从当前可见卡片开始编号</strong>：按住 ⌘ 可以看到卡片编号，再用 ⌘1–9 快速粘贴。横向浏览到后面的历史时，编号会从当前可见的卡片开始，不用再回到最前面找第 1 张。也可以在设置中切回从列表第一张开始编号。</li>
+<li><strong>图片直接选字</strong>：选中图片卡片，按空格打开预览，就能拖选图片里的中英文，再按 ⌘C 复制。</li>
+<li><strong>网页直接预览</strong>：选中链接卡片，按空格就能在 ClipShelf 里打开真实网页，支持滚动浏览、前进后退，也可以再用浏览器打开。</li>
+</ul>
+<p>也支持按内容类型、来源应用筛选、纯文本粘贴，以及先连续复制、再逐项粘贴的顺序粘贴。界面支持中文和英文。</p>
+<p><img alt="图片预览" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://raw.githubusercontent.com/zxdposter/ClipShelf/v0.12.1/docs/images/image-preview-zh.jpg"/></p>
+<p>剪贴板历史保存在本机，可以暂停采集，也可以设置忽略应用。主动打开网页链接预览时会加载对应网站。</p>
+<h3>下载与安装</h3>
+<ul>
+<li><a href="https://github.com/zxdposter/ClipShelf" rel="nofollow">GitHub 源码与介绍</a></li>
+<li><a href="https://github.com/zxdposter/ClipShelf/releases/tag/v0.12.1" rel="nofollow">安装包与更新说明</a></li>
+</ul>
+<p>也可以通过 Homebrew 安装：</p>
+<pre><code class="language-sh">brew install --cask zxdposter/tap/clipshelf
+</code></pre>
+<p>目前版本为 0.12.1，需要 macOS 14 或更新版本，分别提供 Apple 芯片和 Intel 安装包。Intel 包通过了交叉编译与签名检查，尚未在 Intel 真机测试。</p>
+<p>安装说明也提前说一下：当前版本尚未经过 Apple 公证。如果 macOS 阻止打开，请确认下载来源后，在「系统设置 → 隐私与安全性 → 仍要打开」中允许启动。直接粘贴需要系统授权，也可以只复制卡片后自行按 ⌘V 粘贴。</p>
+<p>也想听听大家的建议：你希望剪贴板工具还能做些什么？如果有什么更好用的新功能，或者现有操作中不够顺手的地方，欢迎直接回帖，也可以到 GitHub 提 issue。最好能带上具体使用场景，方便我理解你想解决的问题。</p>
+
+	]]></content>
+</entry><entry>
+	<title>[OpenAI] codex 这就重置了</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251895#reply28" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251895</id>
+	<published>2026-10-26T06:03:48Z</published>
+	<updated>2026-10-26T08:00:08Z</updated>
+	<author>
+		<name>yujianfei</name>
+		<uri>https://www.v2ex.com/member/yujianfei</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>下午两点又重置，完全蹬不完，还剩下 20%还说留着上班用，干</p>
+
+	]]></content>
+</entry><entry>
+	<title>[问与答] 想知道游戏纯图像识别脚本，加上模拟鼠标和键盘操作，不操作内存那种，算不算犯法</title>
+	<link rel="alternate" type="text/html" href="https://www.v2ex.com/t/1251894#reply13" />
+	<id>tag:www.v2ex.com,2026-10-26:/t/1251894</id>
+	<published>2026-10-26T06:01:47Z</published>
+	<updated>2026-10-26T07:47:35Z</updated>
+	<author>
+		<name>kennnnnnnnnnn</name>
+		<uri>https://www.v2ex.com/member/kennnnnnnnnnn</uri>
+	</author>
+	<content type="html" xml:base="https://www.v2ex.com/" xml:lang="en"><![CDATA[
+	<p>最近在玩冒险岛，大模型时代下，发现咸鱼全是这些 ai 图色脚本，想问下，究竟会不会被抓，要不我也去搞搞算了</p>
+
+	]]></content>
+</entry>
+</feed>

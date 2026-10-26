@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="mock 桌面截图">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10161f"/>
+      <stop offset="1" stop-color="#1b2430"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4ea1ff"/>
+      <stop offset="1" stop-color="#bc8cff"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" rx="14" fill="url(#bg1)"/>
+  <rect x="1" y="1" width="798" height="448" rx="13" fill="none" stroke="#2b3542"/>
+  <rect x="28" y="72" width="744" height="300" rx="8" fill="#0c1118" stroke="#232a34"/>
+  <rect x="28" y="72" width="744" height="30" rx="8" fill="#151c25"/>
+  <circle cx="48" cy="87" r="5" fill="#f85149"/>
+  <circle cx="66" cy="87" r="5" fill="#d29922"/>
+  <circle cx="84" cy="87" r="5" fill="#3fb950"/>
+  <text x="120" y="92" fill="#7d8896" font-family="Consolas, monospace" font-size="13">powershell — C:\Users\sayo</text>
+  <rect x="48" y="122" width="16" height="10" rx="2" fill="#4ea1ff"/>
+  <text x="74" y="131" fill="#d6dde6" font-family="Consolas, monospace" font-size="14">PS&gt; fzf --height 40%</text>
+  <text x="74" y="160" fill="#7d8896" font-family="Consolas, monospace" font-size="13">  src/</text>
+  <text x="74" y="184" fill="#4ea1ff" font-family="Consolas, monospace" font-size="13">&gt; main.go</text>
+  <text x="74" y="208" fill="#7d8896" font-family="Consolas, monospace" font-size="13">  internal/</text>
+  <text x="74" y="232" fill="#7d8896" font-family="Consolas, monospace" font-size="13">  web/</text>
+  <rect x="588" y="330" width="164" height="8" rx="4" fill="url(#bar)" opacity="0.8"/>
+  <text x="48" y="404" fill="#d6dde6" font-family="'Segoe UI', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="600">Windows 命令行工具清单</text>
+  <text x="48" y="430" fill="#7d8896" font-family="'Segoe UI', 'Microsoft YaHei', sans-serif" font-size="14">fzf · ripgrep · zoxide · bat · starship</text>
+</svg>

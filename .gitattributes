@@ -1,0 +1,5 @@
+* text=auto eol=lf
+
+# Fixtures are byte-sensitive HTML/JSON captured from the live site.
+internal/v2ex/testdata/** -text
+web/assets/** -text
