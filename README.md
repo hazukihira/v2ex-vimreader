@@ -94,7 +94,7 @@ AI Key 建议放在环境变量 `VIMREADER_AI_KEY`。OpenCode Go 等兼容服务
 | `gg` / `G` | 顶部 / 底部 |
 | `Ctrl-d` / `Ctrl-u` | 半屏下 / 上 |
 | `Ctrl-f` / `Ctrl-b` | 整屏下 / 上 |
-| `Enter` / `l` / `o` | 打开主题、链接或图片 |
+| `Enter` / `Space` / `l` / `o` | 打开主题、链接或图片 |
 | `h` / `q` / `Esc` | 返回 / 关闭浮层 |
 | `H` / `Ctrl-L` | 历史后退 / 前进 |
 | `[` / `]` | 上一页 / 下一页 |
