@@ -1,6 +1,6 @@
 // 列表 / 主题 / 楼层的 DOM 渲染与时间格式化。
 
-import { decorateContent } from './lightbox.js?v=20261026';
+import { decorateContent } from './lightbox.js?v=20261030';
 
 export function h(tag, attrs) {
   const node = document.createElement(tag);

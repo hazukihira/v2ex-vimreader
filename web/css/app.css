@@ -594,7 +594,7 @@ h1.topic-title {
   border-top: 1px solid var(--hairline-soft);
   scroll-margin-top: 40px;
 }
-.reply:hover { background: color-mix(in srgb, var(--hover) 60%, transparent); }
+.reply:hover { background: color-mix(in srgb, var(--hover) 28%, transparent); }
 .reply.current .floor { color: var(--accent); font-weight: 600; }
 .reply.by-op { padding-left: 10px; }
 
@@ -609,7 +609,7 @@ h1.topic-title {
   box-shadow: 0 0 0 3px var(--accent-soft);
   pointer-events: none;
   will-change: transform;
-  transition: transform 0.13s cubic-bezier(0.2, 0.75, 0.3, 1), opacity 0.12s linear;
+  transition: transform 0.16s cubic-bezier(0.2, 0.75, 0.3, 1), opacity 0.12s linear;
 }
 .reply .r-meta {
   grid-column: 1;

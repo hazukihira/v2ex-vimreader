@@ -1,13 +1,13 @@
 // 入口：路由、状态机、键盘流程与各视图装配。
 
-import { api, isMock, ApiError } from './api.js?v=20261026';
-import { store } from './store.js?v=20261026';
-import { KeyEngine } from './vim.js?v=20261026';
-import * as R from './render.js?v=20261026';
-import { initLightbox, isLightboxOpen, openLightbox } from './lightbox.js?v=20261026';
+import { api, isMock, ApiError } from './api.js?v=20261030';
+import { store } from './store.js?v=20261030';
+import { KeyEngine } from './vim.js?v=20261030';
+import * as R from './render.js?v=20261030';
+import { initLightbox, isLightboxOpen, openLightbox } from './lightbox.js?v=20261030';
 import {
   isOverlayOpen, openHelp, openCommandPalette, openMenu, openBlocksManager, openNodePicker, openNodeManager, openLogin, toast,
-} from './overlays.js?v=20261026';
+} from './overlays.js?v=20261030';
 
 const $ = function (selector) { return document.querySelector(selector); };
 const ROW_H = 27;
@@ -238,6 +238,7 @@ function toggleTopicWide() {
 function setSidebarWidth(px) {
   const value = clamp(Math.round(px), 160, 380);
   document.documentElement.style.setProperty('--sidebar-w', value + 'px');
+  requestAnimationFrame(updateFocusCursor);
   return value;
 }
 
@@ -245,6 +246,7 @@ function setDrawer(open) {
   document.body.classList.toggle('drawer-open', Boolean(open));
   const backdrop = $('#sidebar-backdrop');
   if (backdrop) backdrop.classList.toggle('hidden', !open);
+  requestAnimationFrame(updateFocusCursor);
 }
 
 function closeDrawer() {
@@ -258,6 +260,7 @@ function toggleSidebar() {
   }
   const collapsed = document.body.classList.toggle('sidebar-collapsed');
   store.saveSidebarCollapsed(collapsed);
+  requestAnimationFrame(updateFocusCursor);
 }
 
 /* ---------- 状态消息 ---------- */
@@ -947,12 +950,48 @@ function topicItemEl(index) {
   return state.replyEls[index] || null;
 }
 
+let topicScrollAnim = 0;
+let topicScrollToken = 0;
+
+function animateTopicScroll(target, onDone) {
+  const main = $('#main');
+  if (!main) return;
+  const max = Math.max(0, main.scrollHeight - main.clientHeight);
+  const to = Math.max(0, Math.min(max, target));
+  const from = main.scrollTop;
+  const distance = to - from;
+  if (Math.abs(distance) < 1) {
+    if (onDone) onDone();
+    return;
+  }
+  cancelAnimationFrame(topicScrollAnim);
+  const token = ++topicScrollToken;
+  const duration = Math.min(180, Math.max(90, Math.abs(distance) * 0.22 + 70));
+  const started = performance.now();
+  const frame = function (now) {
+    if (token !== topicScrollToken) return;
+    const progress = Math.min(1, (now - started) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    main.scrollTop = from + distance * eased;
+    if (progress < 1) {
+      topicScrollAnim = requestAnimationFrame(frame);
+    } else {
+      topicScrollAnim = 0;
+      if (onDone) onDone();
+    }
+  };
+  topicScrollAnim = requestAnimationFrame(frame);
+}
+
 function scrollTopicStep(delta) {
   if (!delta) return false;
   const main = $('#main');
   const before = main.scrollTop;
-  main.scrollTop = Math.max(0, main.scrollTop + delta);
-  return main.scrollTop !== before;
+  const max = Math.max(0, main.scrollHeight - main.clientHeight);
+  const target = Math.max(0, Math.min(max, before + delta));
+  if (Math.abs(target - before) < 1) return false;
+  animateTopicScroll(target);
+  return true;
 }
 
 function setFloorSelection(index) {
@@ -978,10 +1017,6 @@ function updateFocusCursor() {
   }
   const mainRect = main.getBoundingClientRect();
   const itemRect = item.getBoundingClientRect();
-  if (itemRect.bottom < mainRect.top + 4 || itemRect.top > mainRect.bottom - 4) {
-    cursor.hidden = true;
-    return;
-  }
   const anchor = state.topicSelection < 0 ? item.querySelector('.op-head .author') : item.querySelector('.floor');
   const rect = (anchor || item).getBoundingClientRect();
   let left = rect.left - 10;
@@ -997,25 +1032,49 @@ function updateFocusCursor() {
 const TOP_LEAD = 0.38;
 const BOTTOM_LEAD = 0.62;
 
-function keepTopicItemInBand(el) {
+// 一次按键最多推进约 1/5 屏，避免从长主楼切到回帖时整页猛跳。
+function scrollTopicLimited(delta) {
+  if (!delta) return false;
+  const vp = mainViewport();
+  const cap = Math.max(100, Math.round(vp.height * 0.16));
+  const limited = Math.sign(delta) * Math.min(Math.abs(delta), cap);
+  return scrollTopicStep(limited);
+}
+
+function keepTopicItemInBand(el, direction) {
   if (!el) return;
   const vp = mainViewport();
   const rect = el.getBoundingClientRect();
+  const topLimit = vp.top + vp.height * TOP_LEAD;
+  const bottomLimit = vp.top + vp.height * BOTTOM_LEAD;
+
   if (rect.height > vp.height * 0.6) {
-    const topTarget = vp.top + vp.height * 0.12;
-    if (rect.top > vp.top + vp.height * 0.2) {
-      scrollTopicStep(rect.top - topTarget);
-    } else if (rect.top < vp.top + SCROLL_EDGE) {
-      scrollTopicStep(rect.top - (vp.top + SCROLL_EDGE));
+    if (direction > 0) {
+      // 向下进入长楼层：露出顶部，从开头读
+      if (rect.top > vp.top + vp.height * 0.12) {
+        scrollTopicLimited(rect.top - (vp.top + vp.height * 0.12));
+      }
+    } else if (rect.bottom < vp.bottom - SCROLL_EDGE) {
+      // 向上回到长主楼：停在它末尾，不跳到整篇最顶上
+      scrollTopicLimited(rect.bottom - bottomLimit);
     }
     return;
   }
-  const topLimit = vp.top + vp.height * TOP_LEAD;
-  const bottomLimit = vp.top + vp.height * BOTTOM_LEAD;
-  if (rect.bottom > bottomLimit) {
-    scrollTopicStep(rect.bottom - bottomLimit);
+
+  if (direction > 0) {
+    // 向下：底部低于视口下沿才推进，已经可见就不动
+    if (rect.top > vp.bottom - SCROLL_EDGE) {
+      scrollTopicLimited(rect.top - topLimit);
+    } else if (rect.bottom > bottomLimit) {
+      scrollTopicLimited(rect.bottom - bottomLimit);
+    }
+    return;
+  }
+  // 向上：顶部高于视口上沿才回退，已经可见就不动
+  if (rect.bottom < vp.top + SCROLL_EDGE) {
+    scrollTopicLimited(rect.bottom - bottomLimit);
   } else if (rect.top < topLimit) {
-    scrollTopicStep(rect.top - topLimit);
+    scrollTopicLimited(rect.top - topLimit);
   }
 }
 
@@ -1032,7 +1091,7 @@ function stepTopicCursor(direction) {
   const rect = el.getBoundingClientRect();
   if (direction > 0) {
     if (rect.bottom > vp.bottom - SCROLL_EDGE) {
-      scrollTopicStep(Math.max(24, Math.min(64, rect.bottom - (vp.bottom - SCROLL_EDGE))));
+      scrollTopicLimited(Math.max(24, Math.min(64, rect.bottom - (vp.bottom - SCROLL_EDGE))));
       return;
     }
     if (current >= count - 1) {
@@ -1040,11 +1099,11 @@ function stepTopicCursor(direction) {
       return;
     }
     setFloorSelection(current + 1);
-    keepTopicItemInBand(topicItemEl(current + 1));
+    keepTopicItemInBand(topicItemEl(current + 1), 1);
     return;
   }
   if (rect.top < vp.top + SCROLL_EDGE) {
-    scrollTopicStep(-Math.max(24, Math.min(64, (vp.top + SCROLL_EDGE) - rect.top)));
+    scrollTopicLimited(-Math.max(24, Math.min(64, (vp.top + SCROLL_EDGE) - rect.top)));
     return;
   }
   if (current < 0) {
@@ -1052,7 +1111,7 @@ function stepTopicCursor(direction) {
     return;
   }
   setFloorSelection(current - 1);
-  keepTopicItemInBand(topicItemEl(current - 1));
+  keepTopicItemInBand(topicItemEl(current - 1), -1);
 }
 
 function moveFloor(delta) {
@@ -1085,8 +1144,11 @@ function syncFloorSelectionToViewport() {
 }
 
 function scrollTopicViewport(delta) {
-  scrollTopicStep(delta);
-  syncFloorSelectionToViewport();
+  const main = $('#main');
+  if (!main) return;
+  const max = Math.max(0, main.scrollHeight - main.clientHeight);
+  const target = Math.max(0, Math.min(max, main.scrollTop + delta));
+  animateTopicScroll(target, syncFloorSelectionToViewport);
 }
 
 function openCurrentImage() {
@@ -2058,6 +2120,11 @@ function bindShell() {
   window.addEventListener('resize', function () {
     if (state.route && state.route.view === 'topic') requestAnimationFrame(updateFocusCursor);
   });
+  if (window.ResizeObserver) {
+    new ResizeObserver(function () {
+      if (state.route && state.route.view === 'topic') requestAnimationFrame(updateFocusCursor);
+    }).observe(document.getElementById('main'));
+  }
 
 
   const resize = $('#sidebar-resize');

@@ -133,18 +133,30 @@ export function closeOverlay() {
 
 /* ---------- toast ---------- */
 
+let toastNode = null;
+let toastTimer = 0;
+
 export function toast(message, type, ms) {
   const host = document.getElementById('toast-root');
   if (!host) return null;
+  if (toastTimer) {
+    clearTimeout(toastTimer);
+    toastTimer = 0;
+  }
+  if (toastNode) toastNode.remove();
   const node = document.createElement('div');
   node.className = 'toast' + (type ? ' ' + type : '');
   node.textContent = message;
   host.append(node);
-  while (host.children.length > 3) host.removeChild(host.firstChild);
+  toastNode = node;
   const timeout = ms == null ? (type === 'error' ? 3800 : 2600) : ms;
-  setTimeout(function () {
+  toastTimer = setTimeout(function () {
+    toastTimer = 0;
     node.classList.add('hide');
-    setTimeout(function () { node.remove(); }, 220);
+    setTimeout(function () {
+      node.remove();
+      if (toastNode === node) toastNode = null;
+    }, 220);
   }, timeout);
   return node;
 }
