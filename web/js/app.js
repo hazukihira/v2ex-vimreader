@@ -939,22 +939,29 @@ function setFloorSelection(index) {
   updateStatusContext();
 }
 
-function revealItemEdge(el, direction) {
+// 视口提前量：光标移到视口 38%~62% 之外时，页面才跟着滚动，给下一楼留预览空间。
+const TOP_LEAD = 0.38;
+const BOTTOM_LEAD = 0.62;
+
+function keepTopicItemInBand(el) {
   if (!el) return;
   const vp = mainViewport();
   const rect = el.getBoundingClientRect();
-  if (direction > 0) {
-    if (rect.top > vp.bottom - SCROLL_EDGE) {
-      const offset = Math.min(48, Math.max(16, rect.height * 0.2));
-      scrollTopicStep(rect.top - (vp.bottom - SCROLL_EDGE) + offset);
+  if (rect.height > vp.height * 0.6) {
+    const topTarget = vp.top + vp.height * 0.12;
+    if (rect.top > vp.top + vp.height * 0.2) {
+      scrollTopicStep(rect.top - topTarget);
+    } else if (rect.top < vp.top + SCROLL_EDGE) {
+      scrollTopicStep(rect.top - (vp.top + SCROLL_EDGE));
     }
     return;
   }
-  if (rect.bottom < vp.top + SCROLL_EDGE) {
-    const offset = Math.min(48, Math.max(16, rect.height * 0.2));
-    scrollTopicStep(rect.bottom - (vp.top + SCROLL_EDGE) - offset);
-  } else if (rect.top < vp.top + SCROLL_EDGE) {
-    scrollTopicStep(rect.top - (vp.top + SCROLL_EDGE));
+  const topLimit = vp.top + vp.height * TOP_LEAD;
+  const bottomLimit = vp.top + vp.height * BOTTOM_LEAD;
+  if (rect.bottom > bottomLimit) {
+    scrollTopicStep(rect.bottom - bottomLimit);
+  } else if (rect.top < topLimit) {
+    scrollTopicStep(rect.top - topLimit);
   }
 }
 
@@ -979,7 +986,7 @@ function stepTopicCursor(direction) {
       return;
     }
     setFloorSelection(current + 1);
-    revealItemEdge(topicItemEl(current + 1), 1);
+    keepTopicItemInBand(topicItemEl(current + 1));
     return;
   }
   if (rect.top < vp.top + SCROLL_EDGE) {
@@ -991,7 +998,7 @@ function stepTopicCursor(direction) {
     return;
   }
   setFloorSelection(current - 1);
-  revealItemEdge(topicItemEl(current - 1), -1);
+  keepTopicItemInBand(topicItemEl(current - 1));
 }
 
 function moveFloor(delta) {
@@ -1000,29 +1007,27 @@ function moveFloor(delta) {
   for (let i = 0; i < steps; i += 1) stepTopicCursor(direction);
 }
 
-// Ctrl-d/u/f/b 与 space：直接滚视口，选中项完全离开视口后改选最近的项
+// Ctrl-d/u/f/b 与 space：滚动后把选中项放到视口中线附近，保持阅读提前量。
 function syncFloorSelectionToViewport() {
   const items = topicItemEls();
   if (!items.length) return;
   const vp = mainViewport();
-  const current = items.find(function (item) { return item.index === state.topicSelection; });
-  if (current) {
-    const rect = current.el.getBoundingClientRect();
-    if (rect.bottom > vp.top && rect.top < vp.bottom) return;
-  }
-  const center = (vp.top + vp.bottom) / 2;
-  let best = null;
-  let bestDistance = Infinity;
+  const focusY = vp.top + vp.height * 0.5;
+  let containing = null;
+  let nearest = null;
+  let nearestDistance = Infinity;
   items.forEach(function (item) {
     const rect = item.el.getBoundingClientRect();
+    if (rect.top <= focusY && rect.bottom >= focusY) containing = item;
     const itemCenter = (rect.top + rect.bottom) / 2;
-    const distance = Math.abs(itemCenter - center);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      best = item;
+    const distance = Math.abs(itemCenter - focusY);
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearest = item;
     }
   });
-  if (best && best.index !== state.topicSelection) setFloorSelection(best.index);
+  const target = containing || nearest;
+  if (target && target.index !== state.topicSelection) setFloorSelection(target.index);
 }
 
 function scrollTopicViewport(delta) {
