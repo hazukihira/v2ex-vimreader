@@ -18,7 +18,7 @@
 ## 特点
 
 - **Vim 键位优先**：`j/k`、`gg/G`、`Ctrl-d/u/f/b`、`[ ]` 翻页、`/` 过滤、`:` 命令面板、数字前缀（如 `5j`）。选中项接近视口中线时页面会提前跟随滚动，长楼层先滚完当前楼层内容再切换；当前焦点用左侧短横线指示。
-- **紧凑楼层视图**：楼层号、作者、时间放在左侧窄栏，正文占满剩余宽度；时间仅悬停显示，键盘光标是一条会平滑移动的短竖线 + 高亮楼层号，不整行高亮；楼主回复只保留 OP 徽标。
+- **紧凑楼层视图**：楼层号、作者、时间放在左侧窄栏，正文占满剩余宽度；时间仅悬停显示，键盘光标是一条会平滑移动的短竖线 + 高亮楼层号，不整行高亮；楼主回复只保留 OP 徽标。帖子页显示 V2EX 浏览数（views）。
 - **AI 总结**：配置任意 OpenAI Chat Completions 兼容接口，支持自定义 Header、流式输出、缓存；总结显示在右侧固定面板，不打断阅读位置。
 - **增量同步**：站点 Atom feed + 节点 JSON feed，ETag 条件请求，主题 ID 去重，只补新内容；不会反复全量抓取。
 - **按天浏览**：基于本地增量归档，按创建日期分页；归档覆盖范围会显示在界面上。
@@ -64,6 +64,17 @@ go build -trimpath -ldflags "-s -w" -o v2ex-vimreader .
 ```
 
 Windows 可运行 `scripts\build.ps1`，Linux/macOS 用 `scripts/build.sh`。
+
+### Windows 一键启动（本地目录）
+
+仓库根目录带两个脚本：
+
+- 双击 **`start.cmd`**：如果服务还没启动，就在后台隐藏启动 `bin\v2ex-vimreader.exe`，然后打开 <http://127.0.0.1:7788>；如果已经在运行，只打开浏览器，不会重复启动。
+- 双击 **`stop.cmd`**：停止占用 7788 端口的本程序进程。
+
+桌面上已创建 `v2ex-vimreader.lnk` 快捷方式，目标就是 `start.cmd`；可以右键固定到任务栏/开始菜单。`start.ps1` 是实际的启动逻辑，`start.cmd` 只是双击入口。
+
+> 启动脚本会先把工作目录切到项目根目录，这样 `config.toml` 和 `data/` 永远指向同一个位置，登录 Cookie 和本地归档不会因为启动方式不同而分叉。
 
 ## 配置
 
@@ -158,7 +169,7 @@ x-opencode-client = "v2ex-vimreader"
 1. 从浏览器复制 v2ex.com 的 Cookie 粘贴到面板；或
 2. 点击「从 Chrome 导入」，直接读取本机 Chrome 的登录态（Chrome 需开启远程调试，首次连接会弹出 Allow）。
 
-Cookie 只保存到本机 SQLite，不会通过 API 返回或上传到其它地方；登录状态失效时状态栏会提示。
+Cookie 保存到 `data/v2ex-vimreader.db` 的 meta 表，关闭/重启程序后仍然保留，不需要每次重新登录；只有 V2EX 服务端让 Cookie 过期，或你主动退出登录时才会失效。用 `start.cmd` 或桌面快捷方式启动可以保证始终使用同一个 `data/` 目录。
 
 ## AI 总结
 
@@ -224,7 +235,7 @@ node scripts/serve-web.mjs
 # 打开 http://127.0.0.1:7801/?mock=1
 ```
 
-接口说明见 [docs/API.md](docs/API.md)，前端规格见 [docs/UI-SPEC.md](docs/UI-SPEC.md)，更多调研记录见 [docs/RESEARCH.md](docs/RESEARCH.md)。
+接口说明见 [docs/API.md](docs/API.md)，架构与核心逻辑见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，前端规格见 [docs/UI-SPEC.md](docs/UI-SPEC.md)，更多调研记录见 [docs/RESEARCH.md](docs/RESEARCH.md)。
 
 反馈与贡献：直接开 issue / PR。解析器依赖页面结构，页面改版时可能失效；遇到问题请附上主题/节点链接和 `-debug` 日志。
 

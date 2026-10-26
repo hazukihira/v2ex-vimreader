@@ -14,7 +14,7 @@ var (
 	reTopicIDScript = regexp.MustCompile(`topicId\s*=\s*(\d+)`)
 	reNodeTotal     = regexp.MustCompile(`Topics\s+\d+\s+to\s+\d+\s+of\s+(\d+)`)
 	reRecentPages   = regexp.MustCompile(`Recent Topics\s+\d+\s*/\s*(\d+)`)
-	reViews         = regexp.MustCompile(`([0-9,]+)\s+views`)
+	reViews         = regexp.MustCompile(`([0-9,]+)\s*(?:views|次点击)`)
 	reNodePrefix    = regexp.MustCompile(`^\[([^\]]{1,60})\]\s*(.*)$`)
 )
 

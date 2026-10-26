@@ -495,7 +495,6 @@ export function renderFollowedNodes(container, nodes, followed, activeNode) {
     const node = nodes.get(name);
     const link = h('a', { class: 'node-link' + (name === activeNode ? ' active' : ''), href: '#/node/' + name, title: node ? node.title || name : name });
     link.append(h('span', { class: 'n-name', text: name }));
-    if (node && node.title) link.append(h('span', { class: 'n-title', text: node.title }));
     container.append(link);
   }
 }

@@ -59,6 +59,11 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	// config.toml 里的相对 data_dir 以配置文件所在目录为基准，
+	// 这样从 bin/ 直接双击 exe 也能找到项目根目录下的 data/（登录 Cookie 才会持续存在）。
+	if dataDir == "" && cfg.DataDir != "" && !filepath.IsAbs(cfg.DataDir) && configPath != "" {
+		cfg.DataDir = filepath.Join(filepath.Dir(configPath), cfg.DataDir)
+	}
 	if listen != "" {
 		cfg.Listen = listen
 	}
@@ -161,7 +166,11 @@ func run() error {
 func findConfig() string {
 	candidates := []string{"config.toml"}
 	if exe, err := os.Executable(); err == nil {
-		candidates = append(candidates, filepath.Join(filepath.Dir(exe), "config.toml"))
+		exeDir := filepath.Dir(exe)
+		candidates = append(candidates,
+			filepath.Join(exeDir, "config.toml"),
+			filepath.Join(exeDir, "..", "config.toml"),
+		)
 	}
 	for _, candidate := range candidates {
 		if _, err := os.Stat(candidate); err == nil {

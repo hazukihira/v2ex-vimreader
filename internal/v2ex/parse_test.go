@@ -125,6 +125,15 @@ func TestParseTopicPage(t *testing.T) {
 	}
 }
 
+func TestViewsRegexChinese(t *testing.T) {
+	for _, text := range []string{"· 102459 次点击", "· 102,459 次点击", "· 102459 views"} {
+		m := reViews.FindStringSubmatch(text)
+		if m == nil || m[1] == "" {
+			t.Fatalf("views pattern did not match %q", text)
+		}
+	}
+}
+
 func TestParseTopicPage2(t *testing.T) {
 	tp := ParseTopicPage(loadDoc(t, "t1_p2.html"), 2)
 	if tp.Pages != 2 {
