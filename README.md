@@ -53,13 +53,6 @@ go build -trimpath -ldflags "-s -w" -o v2ex-vimreader .
 
 Windows 可运行 `scripts\build.ps1`，Linux/macOS 用 `scripts/build.sh`。
 
-### Windows 一键启动（本地目录）
-
-- 双击 **`start.cmd`**：后台启动 `bin\v2ex-vimreader.exe` 并打开浏览器；已在运行则只打开浏览器。
-- 双击 **`stop.cmd`**：停止占用 7788 的进程。
-
-桌面快捷方式 `v2ex-vimreader.lnk` 指向 `start.cmd`，可固定到任务栏或开始菜单。`start.ps1` 是实际启动逻辑。
-
 ## 配置
 
 把 `config.example.toml` 复制为 `config.toml`。所有配置都有默认值，没有该文件也能运行。

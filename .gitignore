@@ -25,3 +25,8 @@ config.local.toml
 
 # local UI scratch files (screenshots, mock shots)
 .tmp-ui/
+
+# local Windows launcher (not part of the project)
+/start.cmd
+/start.ps1
+/stop.cmd
