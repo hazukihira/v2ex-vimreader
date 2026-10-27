@@ -95,17 +95,22 @@ export const store = {
   },
 
   clearCache() {
+    const keepKeys = [PREFIX + 'theme', PREFIX + 'favorites', PREFIX + 'queue'];
     const keep = {};
     try {
-      const theme = localStorage.getItem(PREFIX + 'theme');
-      if (theme != null) keep.theme = theme;
+      for (const key of keepKeys) {
+        const value = localStorage.getItem(key);
+        if (value != null) keep[key] = value;
+      }
       const keys = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith(PREFIX) && key !== PREFIX + 'theme') keys.push(key);
+        if (key && key.startsWith(PREFIX) && !keepKeys.includes(key)) keys.push(key);
       }
       for (const key of keys) localStorage.removeItem(key);
-      if (keep.theme != null) localStorage.setItem(PREFIX + 'theme', keep.theme);
+      for (const key of keepKeys) {
+        if (keep[key] != null) localStorage.setItem(key, keep[key]);
+      }
     } catch (e) {}
   },
 };

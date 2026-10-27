@@ -210,7 +210,7 @@ export function renderList(view, ctx) {
   entries.forEach(function (entry, index) {
     const read = ctx.readSet && (ctx.readSet.has(entry.id) || ctx.readSet.has(String(entry.id)));
     const row = h('a', {
-      class: 'row' + (index === ctx.selected ? ' current' : '') + (read ? ' read' : ''),
+      class: 'row' + (index === ctx.selected ? ' current' : '') + (read ? ' read' : '') + (ctx.favoriteSet && ctx.favoriteSet.has(entry.id) ? ' faved' : ''),
       href: '#/topic/' + entry.id,
       'data-i': index,
       role: 'listitem',
@@ -375,7 +375,8 @@ function buildTopicHead(ctx) {
     h('span', { class: 'num', text: topic.createdAt ? fmtDateTime(topic.createdAt) : '创建时间未知' }),
     h('span', { class: 'num', text: '回复 ' + replyCount(topic) }),
     h('span', { class: 'num', text: topic.views > 0 ? '浏览 ' + topic.views : '' }),
-    h('span', { class: 'num', text: ctx.read ? '已读' : '未读' })
+    h('span', { class: 'num', text: ctx.read ? '已读' : '未读' }),
+    h('span', { class: 'num fav-meta', id: 'topic-favorite', text: ctx.favorite ? '★ 已收藏' : '☆ 未收藏', title: '按 f 收藏' })
   );
   main.append(crumb, title, meta);
   head.append(main);

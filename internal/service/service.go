@@ -175,11 +175,13 @@ func (s *Service) Status(ctx context.Context) (*StatusResponse, error) {
 
 // StartBackground launches the incremental sync loops.
 func (s *Service) StartBackground() {
+	ctx, cancel := context.WithCancel(context.Background())
+	s.cancel = cancel
+	s.wg.Add(1)
+	go func() { defer s.wg.Done(); s.cacheMaintenanceLoop(ctx) }()
 	if !s.cfg.Sync.Enabled {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
-	s.cancel = cancel
 	s.wg.Add(4)
 	go func() { defer s.wg.Done(); s.nodeDirectoryLoop(ctx) }()
 	go func() { defer s.wg.Done(); s.siteFeedLoop(ctx) }()

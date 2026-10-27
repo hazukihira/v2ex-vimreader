@@ -33,14 +33,27 @@ func (s *Service) Topic(ctx context.Context, id int64, page int, refresh bool) (
 	return value.(*TopicResponse), nil
 }
 
+func (s *Service) topicCacheUsable(topic model.Topic) bool {
+	if topic.ContentHTML == "" || topic.FetchedAt == 0 {
+		return false
+	}
+	if topic.CreatedAt > 0 {
+		local := time.Unix(topic.CreatedAt, 0).In(s.loc)
+		now := time.Now().In(s.loc)
+		if local.Year() == now.Year() && local.YearDay() == now.YearDay() {
+			return true
+		}
+	}
+	return isFresh(topic.FetchedAt, s.cfg.Fetch.TopicCacheTTL())
+}
+
 func (s *Service) loadTopic(ctx context.Context, id int64, page int, refresh bool) (*TopicResponse, error) {
 	topic, err := s.st.GetTopic(ctx, id)
 	if err != nil && !errors.Is(err, store.ErrNotFound) {
 		return nil, err
 	}
 	pages := s.topicPages(ctx, topic)
-	needFetch := refresh || topic.FetchedAt == 0 || topic.ContentHTML == "" ||
-		!isFresh(topic.FetchedAt, s.cfg.Fetch.TopicCacheTTL())
+	needFetch := refresh || !s.topicCacheUsable(topic)
 	if needFetch {
 		parsed, err := s.fetchTopicPage(ctx, id, 1)
 		if err != nil {

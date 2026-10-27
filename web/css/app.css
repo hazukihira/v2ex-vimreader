@@ -976,3 +976,7 @@ h1.topic-title {
   }
   .queue-body { max-height: 62vh; }
 }
+
+.row.faved .title-cell::after { content: "★"; color: var(--accent); font-size: 10px; margin-left: 6px; flex: 0 0 auto; }
+.fav-meta { color: var(--accent); }
+.favorites-state.on { color: var(--accent); background: var(--accent-soft); }

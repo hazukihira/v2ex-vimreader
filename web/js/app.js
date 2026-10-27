@@ -60,6 +60,9 @@ const state = {
   queue: [],
   queueOpen: false,
   queueIndex: 0,
+  favorites: [],
+  favoritesOpen: false,
+  favoritesIndex: 0,
 };
 
 const engine = new KeyEngine();
@@ -98,6 +101,8 @@ const HELP_GROUPS = [
       ['p', '预览当前主题'],
       ['a', '加入 / 移出待读'],
       ['Q', '待读队列'],
+      ['f', '收藏 / 取消收藏当前主题'],
+      ['F', '收藏列表'],
     ],
   },
   {
@@ -109,6 +114,7 @@ const HELP_GROUPS = [
       ['[ ] n p', '楼层上一页 / 下一页'],
       ['t', '最新楼层页'],
       ['s', 'AI 总结（流式）'],
+      ['f', '收藏 / 取消收藏当前主题'],
       ['i', '查看当前楼层图片'],
       ['w', '宽屏 / 收束楼层内容'],
       ['Enter o', '打开楼层图片 / 链接'],
@@ -129,6 +135,8 @@ const HELP_GROUPS = [
       [':wide', '宽屏 / 收束楼层内容（也可按 w）'],
       [':preview', '预览当前主题'],
       [':queue', '打开待读队列'],
+      [':favorite', '收藏 / 取消收藏当前主题'],
+      [':favorites', '打开收藏列表'],
       [':refresh', '刷新当前视图'],
       [':block-user <名字>', '屏蔽用户'],
       [':block-topic <id>', '屏蔽主题'],
@@ -152,6 +160,8 @@ const COMMANDS = [
   { name: 'wide', desc: 'wide 宽屏 / 收束楼层内容' },
   { name: 'preview', desc: 'preview 预览当前主题' },
   { name: 'queue', desc: 'queue 打开待读队列' },
+  { name: 'favorite', desc: 'favorite 收藏 / 取消收藏当前主题' },
+  { name: 'favorites', desc: 'favorites 打开收藏列表' },
   { name: 'block-user', desc: 'block-user <用户名> 屏蔽用户' },
   { name: 'block-topic', desc: 'block-topic <id> 屏蔽主题' },
   { name: 'unblock-user', desc: 'unblock-user <用户名> 解除屏蔽' },
@@ -557,6 +567,7 @@ function scheduleLoading(text) {
 async function show(route) {
   closePreview();
   closeQueue();
+  closeFavorites();
   closeDrawer();
   state.route = route;
   state.viewRoute = route;
@@ -778,6 +789,7 @@ function renderListView(route) {
     selected: state.selection,
     filter: state.filter,
     readSet: state.read,
+    favoriteSet: new Set(state.favorites.map(function (item) { return Number(item.id); })),
     kind: target.kind,
     node: target.node,
     nodeTitle: nodeTitle(target.node),
@@ -1048,6 +1060,7 @@ function openQueue() {
     return;
   }
   closePreview();
+  closeFavorites();
   state.queueOpen = true;
   state.queueIndex = clamp(state.queueIndex, 0, Math.max(0, state.queue.length - 1));
   const overlay = document.getElementById('queue-overlay');
@@ -1136,6 +1149,207 @@ function removeQueueSelected() {
   updateQueueUi();
   if (state.queueIndex >= state.queue.length) state.queueIndex = Math.max(0, state.queue.length - 1);
   renderQueue();
+}
+
+
+/* ---------- 本地收藏 ---------- */
+
+const FAVORITES_KEY = 'v2r:favorites';
+const FAVORITES_LIMIT = 500;
+
+function loadFavorites() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+    if (!Array.isArray(raw)) return [];
+    return raw.filter(function (item) { return item && Number(item.id) > 0; }).map(function (item) {
+      return {
+        id: Number(item.id),
+        title: String(item.title || ''),
+        node: String(item.node || ''),
+        nodeTitle: String(item.nodeTitle || ''),
+        author: String(item.author || ''),
+        replies: Number(item.replies) || 0,
+        createdAt: Number(item.createdAt) || 0,
+        addedAt: Number(item.addedAt) || Math.floor(Date.now() / 1000),
+      };
+    }).slice(0, FAVORITES_LIMIT);
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveFavorites() {
+  try { localStorage.setItem(FAVORITES_KEY, JSON.stringify(state.favorites)); } catch (error) { /* ignore */ }
+}
+
+function favoriteIndexById(id) {
+  return state.favorites.findIndex(function (item) { return Number(item.id) === Number(id); });
+}
+
+function isFavorite(id) {
+  return favoriteIndexById(id) >= 0;
+}
+
+function updateFavoritesUi() {
+  const button = document.getElementById('favorites-state');
+  if (!button) return;
+  button.textContent = '收藏 ' + state.favorites.length;
+  button.classList.toggle('on', state.favorites.length > 0);
+  button.title = state.favorites.length
+    ? '收藏：' + state.favorites.slice(0, 6).map(function (item) { return item.title; }).join(' / ')
+    : '收藏 (F)';
+}
+
+function favoriteSnapshot(item) {
+  return {
+    id: Number(item.id),
+    title: item.title || '',
+    node: item.node || '',
+    nodeTitle: item.nodeTitle || '',
+    author: item.author || '',
+    replies: Number(item.replies) || 0,
+    createdAt: Number(item.createdAt) || 0,
+    addedAt: Math.floor(Date.now() / 1000),
+  };
+}
+
+function favoriteTarget() {
+  if (state.previewOpen && state.previewData && state.previewData.topic) return state.previewData.topic;
+  if (state.route && state.route.view === 'topic' && state.topic) return state.topic.topic;
+  if (state.route && state.route.view === 'list') return state.entries[state.selection] || null;
+  return null;
+}
+
+function syncFavoriteMarker(id) {
+  if (state.route && state.route.view === 'list') {
+    const entry = state.entries[state.selection];
+    const row = state.rowEls[state.selection];
+    if (row && entry && Number(entry.id) === Number(id)) row.classList.toggle('faved', isFavorite(id));
+  }
+  const topicMark = document.getElementById('topic-favorite');
+  if (topicMark && state.topic && Number(state.topic.topic.id) === Number(id)) {
+    topicMark.textContent = isFavorite(id) ? '★ 已收藏' : '☆ 未收藏';
+  }
+}
+
+function toggleFavoriteCurrent() {
+  if (state.queueOpen || state.favoritesOpen) return;
+  const source = favoriteTarget();
+  if (!source) {
+    toast('没有可收藏的主题', 'error');
+    return;
+  }
+  const item = favoriteSnapshot(source);
+  const index = favoriteIndexById(item.id);
+  if (index >= 0) {
+    state.favorites.splice(index, 1);
+    toast('已取消收藏', 'ok');
+  } else {
+    state.favorites.unshift(item);
+    if (state.favorites.length > FAVORITES_LIMIT) state.favorites.length = FAVORITES_LIMIT;
+    toast('已收藏（' + state.favorites.length + '）', 'ok');
+  }
+  saveFavorites();
+  updateFavoritesUi();
+  syncFavoriteMarker(item.id);
+}
+
+function openFavorites() {
+  if (!state.route || state.route.view !== 'list') {
+    toast('收藏面板请在列表视图打开', 'error');
+    return;
+  }
+  closePreview();
+  closeQueue();
+  state.favoritesOpen = true;
+  state.favoritesIndex = clamp(state.favoritesIndex, 0, Math.max(0, state.favorites.length - 1));
+  const overlay = document.getElementById('favorites-overlay');
+  if (overlay) overlay.classList.remove('hidden');
+  renderFavorites();
+}
+
+function closeFavorites() {
+  state.favoritesOpen = false;
+  const overlay = document.getElementById('favorites-overlay');
+  if (overlay) overlay.classList.add('hidden');
+  const body = document.getElementById('favorites-body');
+  if (body) R.clear(body);
+}
+
+function paintFavoritesSelection() {
+  const body = document.getElementById('favorites-body');
+  if (!body) return;
+  const previous = body.querySelector('.queue-row.current');
+  if (previous) previous.classList.remove('current');
+  const row = body.querySelector('.queue-row[data-favorite-i="' + state.favoritesIndex + '"]');
+  if (row) {
+    row.classList.add('current');
+    row.scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function moveFavorites(delta) {
+  if (!state.favorites.length) return;
+  state.favoritesIndex = clamp(state.favoritesIndex + delta, 0, state.favorites.length - 1);
+  paintFavoritesSelection();
+}
+
+function renderFavorites() {
+  const body = document.getElementById('favorites-body');
+  const sub = document.getElementById('favorites-sub');
+  if (!body) return;
+  R.clear(body);
+  if (sub) sub.textContent = state.favorites.length + ' 个';
+  if (!state.favorites.length) {
+    body.append(R.h('div', { class: 'queue-empty', text: '还没有收藏。列表或主题内按 f 收藏当前帖子。' }));
+    return;
+  }
+  if (state.favoritesIndex >= state.favorites.length) state.favoritesIndex = state.favorites.length - 1;
+  if (state.favoritesIndex < 0) state.favoritesIndex = 0;
+  state.favorites.forEach(function (item, index) {
+    const row = R.h('div', { class: 'queue-row' + (index === state.favoritesIndex ? ' current' : ''), 'data-favorite-i': index });
+    row.append(
+      R.h('span', { class: 'q-idx', text: String(index + 1) }),
+      R.h('span', { class: 'q-main' }, R.h('span', { class: 'q-title', text: item.title || ('主题 #' + item.id) }), R.h('span', { class: 'q-sub', text: '#' + (item.node || '') + ' · ' + (item.author || '') + ' · ' + (item.replies || 0) + ' 回复' })),
+      R.h('span', { class: 'q-del', text: 'x' })
+    );
+    row.addEventListener('click', function (event) {
+      state.favoritesIndex = index;
+      if (event.target.closest('.q-del')) removeFavoriteSelected();
+      else renderFavorites();
+    });
+    body.append(row);
+  });
+  body.append(R.h('div', { class: 'preview-foot', style: 'padding:10px 18px 14px' }, 'j/k 选择 · ', R.h('kbd', { text: 'Enter' }), ' 打开 · ', R.h('kbd', { text: 'p' }), ' 预览 · ', R.h('kbd', { text: 'x' }), ' 移除 · ', R.h('kbd', { text: 'Esc' }), ' 关闭'));
+  const current = body.querySelector('.queue-row.current');
+  if (current) current.scrollIntoView({ block: 'nearest' });
+}
+
+function openFavoriteSelected() {
+  const item = state.favorites[state.favoritesIndex];
+  if (!item) {
+    toast('收藏为空', 'error');
+    return;
+  }
+  closeFavorites();
+  navigate({ view: 'topic', id: item.id, page: 1 });
+}
+
+function previewFavoriteSelected() {
+  const item = state.favorites[state.favoritesIndex];
+  if (!item) return;
+  closeFavorites();
+  openPreview(item.id);
+}
+
+function removeFavoriteSelected() {
+  if (!state.favorites.length) return;
+  const [removed] = state.favorites.splice(state.favoritesIndex, 1);
+  saveFavorites();
+  updateFavoritesUi();
+  if (removed) syncFavoriteMarker(removed.id);
+  if (state.favoritesIndex >= state.favorites.length) state.favoritesIndex = Math.max(0, state.favorites.length - 1);
+  renderFavorites();
 }
 
 function currentListPage() {
@@ -1241,6 +1455,7 @@ function renderTopicView() {
     pageSize: data.pageSize,
     selected: state.topicSelection,
     read: state.read.has(Number(topic.id)),
+    favorite: isFavorite(topic.id),
     blockedTopic: state.blocks.topics.has(Number(topic.id)),
   });
   state.replyEls = handled.replyEls;
@@ -2016,6 +2231,10 @@ async function runCommand(line) {
       return openPreviewSelected();
     case 'queue':
       return openQueue();
+    case 'favorite':
+      return toggleFavoriteCurrent();
+    case 'favorites':
+      return openFavorites();
     case 'theme': {
       const theme = rest[0];
       if (theme === 'dark' || theme === 'light') setTheme(theme);
@@ -2348,12 +2567,14 @@ function startTimers() {
 function listDown(count) {
   if (state.previewOpen) return scrollPreview(90 * Math.abs(count || 1));
   if (state.queueOpen) return moveQueue(count);
+  if (state.favoritesOpen) return moveFavorites(count);
   moveList(count);
 }
 
 function listUp(count) {
   if (state.previewOpen) return scrollPreview(-90 * Math.abs(count || 1));
   if (state.queueOpen) return moveQueue(-count);
+  if (state.favoritesOpen) return moveFavorites(-count);
   moveList(-count);
 }
 
@@ -2366,6 +2587,11 @@ function listTop() {
   if (state.queueOpen) {
     state.queueIndex = 0;
     renderQueue();
+    return;
+  }
+  if (state.favoritesOpen) {
+    state.favoritesIndex = 0;
+    renderFavorites();
     return;
   }
   if (!state.selectable.length) return;
@@ -2385,6 +2611,11 @@ function listBottom() {
     renderQueue();
     return;
   }
+  if (state.favoritesOpen) {
+    state.favoritesIndex = Math.max(0, state.favorites.length - 1);
+    renderFavorites();
+    return;
+  }
   if (!state.selectable.length) return;
   state.selection = state.selectable[state.selectable.length - 1];
   paintListSelection(true);
@@ -2398,11 +2629,13 @@ function listPage(delta) {
     return scrollPreview(Math.sign(delta) * height * ratio);
   }
   if (state.queueOpen) return moveQueue(delta > 0 ? 5 : -5);
+  if (state.favoritesOpen) return moveFavorites(delta > 0 ? 5 : -5);
   moveList(delta);
 }
 
 function listOpen() {
   if (state.queueOpen) return openQueueSelected();
+  if (state.favoritesOpen) return openFavoriteSelected();
   if (state.previewOpen) return openPreviewFull();
   return openSelectedTopic();
 }
@@ -2410,11 +2643,12 @@ function listOpen() {
 function listTogglePreview() {
   if (state.previewOpen) return closePreview();
   if (state.queueOpen) return previewQueueSelected();
+  if (state.favoritesOpen) return previewFavoriteSelected();
   return openPreviewSelected();
 }
 
 function listToggleQueue() {
-  if (state.queueOpen) return;
+  if (state.queueOpen || state.favoritesOpen) return;
   if (state.previewOpen) {
     const topic = state.previewData && state.previewData.topic;
     if (!topic) return;
@@ -2448,8 +2682,18 @@ function listQueueToggle() {
   else openQueue();
 }
 
+function listToggleFavorite() {
+  toggleFavoriteCurrent();
+}
+
+function listFavoritesToggle() {
+  if (state.favoritesOpen) closeFavorites();
+  else openFavorites();
+}
+
 function listQuit() {
   if (state.queueOpen) return closeQueue();
+  if (state.favoritesOpen) return closeFavorites();
   if (state.previewOpen) return closePreview();
   return goBack();
 }
@@ -2471,6 +2715,8 @@ function listBindings() {
     'p': listTogglePreview,
     'a': listToggleQueue,
     'Q': listQueueToggle,
+    'f': listToggleFavorite,
+    'F': listFavoritesToggle,
     'h': listQuit,
     'q': listQuit,
     'H': function () { goHistory(-1); },
@@ -2487,7 +2733,11 @@ function listBindings() {
     'b': openBlockMenu,
     'u': blockCurrentAuthor,
     'm': toggleReadCurrent,
-    'x': function () { if (state.queueOpen) removeQueueSelected(); else blockCurrentTopic(); },
+    'x': function () {
+      if (state.favoritesOpen) removeFavoriteSelected();
+      else if (state.queueOpen) removeQueueSelected();
+      else blockCurrentTopic();
+    },
     '?': openHelpOverlay,
     ':': openPalette,
     '\\': toggleSidebar,
@@ -2526,6 +2776,7 @@ function topicBindings() {
     'i': openCurrentImage,
     'w': toggleTopicWide,
     's': toggleSummary,
+    'f': toggleFavoriteCurrent,
     'b': openBlockMenu,
     'x': blockCurrentTopic,
     'u': blockCurrentAuthor,
@@ -2549,6 +2800,10 @@ function openHelpOverlay() {
 function handleEscape() {
   if (state.queueOpen) {
     closeQueue();
+    return;
+  }
+  if (state.favoritesOpen) {
+    closeFavorites();
     return;
   }
   if (state.previewOpen) {
@@ -2585,6 +2840,14 @@ function bindShell() {
   if (queueClose) queueClose.addEventListener('click', closeQueue);
   const queueState = document.getElementById('queue-state');
   if (queueState) queueState.addEventListener('click', openQueue);
+  const favoritesState = document.getElementById('favorites-state');
+  if (favoritesState) favoritesState.addEventListener('click', openFavorites);
+  const favoritesClose = document.getElementById('favorites-close');
+  if (favoritesClose) favoritesClose.addEventListener('click', closeFavorites);
+  const favoritesOverlay = document.getElementById('favorites-overlay');
+  if (favoritesOverlay) favoritesOverlay.addEventListener('click', function (event) {
+    if (event.target === favoritesOverlay) closeFavorites();
+  });
   const queueOverlay = document.getElementById('queue-overlay');
   if (queueOverlay) queueOverlay.addEventListener('click', function (event) {
     if (event.target === queueOverlay) closeQueue();
@@ -2714,6 +2977,8 @@ async function boot() {
   initLightbox();
   state.queue = loadQueue();
   updateQueueUi();
+  state.favorites = loadFavorites();
+  updateFavoritesUi();
   applyTheme(store.theme());
   try { applyWideReading(localStorage.getItem('v2r:wide') === '1'); } catch (e) { /* ignore */ }
   setSidebarWidth(store.sidebarWidth());

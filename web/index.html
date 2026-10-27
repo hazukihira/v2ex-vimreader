@@ -58,6 +58,7 @@
   <span id="st-hint" class="muted st-hint"></span>
   <span class="spacer"></span>
   <span id="st-page" class="num"></span>
+  <button id="favorites-state" class="login-state queue-state favorites-state" type="button" title="收藏 (F)">收藏 0</button>
   <button id="queue-state" class="login-state queue-state" type="button" title="待读队列 (Q)">待读 0</button>
   <button id="login-state" class="login-state" type="button" title="登录 V2EX (g l)">未登录</button>
   <span id="st-msg" class="st-msg" role="status" aria-live="polite"></span>
@@ -81,6 +82,18 @@
       <button id="queue-close" class="icon-btn" type="button" title="关闭 (Esc)" aria-label="关闭">✕</button>
     </div>
     <div id="queue-body" class="overlay-body queue-body"></div>
+  </div>
+</div>
+
+<div id="favorites-overlay" class="overlay queue-overlay hidden" role="dialog" aria-modal="true" aria-label="本地收藏">
+  <div class="overlay-panel queue-panel">
+    <div class="overlay-head">
+      <h2>收藏</h2>
+      <span id="favorites-sub" class="sub"></span>
+      <span class="spacer"></span>
+      <button id="favorites-close" class="icon-btn" type="button" title="关闭 (Esc)" aria-label="关闭">✕</button>
+    </div>
+    <div id="favorites-body" class="overlay-body queue-body"></div>
   </div>
 </div>
 
