@@ -51,6 +51,13 @@ const state = {
   statusTimer: 0,
   nodesFetching: false,
   nodeManagerBusy: false,
+  previewOpen: false,
+  previewId: 0,
+  previewData: null,
+  previewSeq: 0,
+  queue: [],
+  queueOpen: false,
+  queueIndex: 0,
 };
 
 const engine = new KeyEngine();
@@ -86,6 +93,9 @@ const HELP_GROUPS = [
       ['x', '屏蔽当前主题'],
       ['u', '屏蔽当前作者'],
       ['m', '标记已读 / 未读'],
+      ['p', '预览当前主题'],
+      ['a', '加入 / 移出待读'],
+      ['Q', '待读队列'],
     ],
   },
   {
@@ -115,6 +125,8 @@ const HELP_GROUPS = [
       [':topic <id>', '打开主题'],
       [':theme dark|light', '切换主题'],
       [':wide', '宽屏 / 收束楼层内容（也可按 w）'],
+      [':preview', '预览当前主题'],
+      [':queue', '打开待读队列'],
       [':refresh', '刷新当前视图'],
       [':block-user <名字>', '屏蔽用户'],
       [':block-topic <id>', '屏蔽主题'],
@@ -136,6 +148,8 @@ const COMMANDS = [
   { name: 'refresh', desc: '重新加载当前视图' },
   { name: 'theme', desc: 'theme dark|light 切换主题' },
   { name: 'wide', desc: 'wide 宽屏 / 收束楼层内容' },
+  { name: 'preview', desc: 'preview 预览当前主题' },
+  { name: 'queue', desc: 'queue 打开待读队列' },
   { name: 'block-user', desc: 'block-user <用户名> 屏蔽用户' },
   { name: 'block-topic', desc: 'block-topic <id> 屏蔽主题' },
   { name: 'unblock-user', desc: 'unblock-user <用户名> 解除屏蔽' },
@@ -517,6 +531,8 @@ function renderLoading(text) {
 }
 
 async function show(route) {
+  closePreview();
+  closeQueue();
   closeDrawer();
   state.route = route;
   state.viewRoute = route;
@@ -800,6 +816,272 @@ function openSelectedTopic() {
     return;
   }
   navigate({ view: 'topic', id: entry.id, page: 1 });
+}
+
+/* ---------- 列表内预览 ---------- */
+
+function closePreview() {
+  state.previewOpen = false;
+  state.previewSeq += 1;
+  const panel = document.getElementById('preview-panel');
+  if (panel) panel.classList.add('hidden');
+}
+
+function openPreview(id) {
+  const numeric = Number(id);
+  if (!numeric) return;
+  closeQueue();
+  state.previewOpen = true;
+  state.previewId = numeric;
+  state.previewSeq += 1;
+  const seq = state.previewSeq;
+  const panel = document.getElementById('preview-panel');
+  const title = document.getElementById('preview-title');
+  const body = document.getElementById('preview-body');
+  if (!panel || !body) return;
+  panel.classList.remove('hidden');
+  const known = state.entries.find(function (entry) { return Number(entry.id) === numeric; })
+    || state.queue.find(function (item) { return Number(item.id) === numeric; });
+  if (title) title.textContent = (known && known.title) || ('主题 #' + numeric);
+  R.clear(body);
+  body.append(R.h('p', { class: 'preview-loading', text: '加载中…' }));
+  api.topic(numeric, 1).then(function (data) {
+    if (seq !== state.previewSeq || !state.previewOpen) return;
+    state.previewData = data;
+    renderPreview(data);
+  }).catch(function (error) {
+    if (seq !== state.previewSeq || !state.previewOpen) return;
+    R.clear(body);
+    body.append(R.h('p', { class: 'preview-empty', text: friendlyError(error) }));
+  });
+}
+
+function openPreviewSelected() {
+  if (!state.route || state.route.view !== 'list') {
+    toast('预览请在列表视图使用', 'error');
+    return;
+  }
+  const entry = state.entries[state.selection];
+  if (!entry) {
+    toast('没有选中的主题', 'error');
+    return;
+  }
+  openPreview(entry.id);
+}
+
+function openPreviewFull() {
+  if (!state.previewOpen || !state.previewId) return;
+  const id = state.previewId;
+  closePreview();
+  navigate({ view: 'topic', id: id, page: 1 });
+}
+
+function togglePreview() {
+  if (state.previewOpen) closePreview();
+  else openPreviewSelected();
+}
+
+function scrollPreview(delta) {
+  const body = document.getElementById('preview-body');
+  if (body) body.scrollTop += delta;
+}
+
+function renderPreview(data) {
+  const topic = data.topic || {};
+  const body = document.getElementById('preview-body');
+  const title = document.getElementById('preview-title');
+  if (!body) return;
+  if (title) title.textContent = topic.title || ('主题 #' + topic.id);
+  R.clear(body);
+  const meta = R.h('div', { class: 'preview-meta' });
+  meta.append(
+    R.h('span', { text: '#' + (topic.node || '') }),
+    R.h('span', { text: topic.author || '' }),
+    R.h('span', { text: topic.createdAt ? R.fmtDateTime(topic.createdAt) : '' }),
+    R.h('span', { text: '回复 ' + R.replyCount(topic) }),
+    R.h('span', { text: topic.views > 0 ? '浏览 ' + topic.views : '' })
+  );
+  body.append(meta, R.h('h2', { class: 'preview-op-title', text: topic.title || '' }));
+  const op = R.h('div', { class: 'preview-content' });
+  op.innerHTML = topic.contentHtml || '<p class="muted">（正文为空）</p>';
+  body.append(op);
+  const replies = data.replies || [];
+  if (replies.length) {
+    const list = R.h('div', { class: 'preview-replies' });
+    replies.forEach(function (reply) {
+      const row = R.h('article', { class: 'preview-reply' });
+      const rmeta = R.h('div', { class: 'preview-reply-meta' });
+      rmeta.append(
+        R.h('span', { text: '#' + reply.floor }),
+        R.h('span', { text: reply.author || '' }),
+        R.h('span', { text: reply.createdAt ? R.fmtTime(reply.createdAt) : '' })
+      );
+      if (reply.isOp) rmeta.append(R.h('span', { text: 'OP' }));
+      const content = R.h('div', { class: 'preview-content' });
+      content.innerHTML = reply.contentHtml || '';
+      row.append(rmeta, content);
+      list.append(row);
+    });
+    body.append(list);
+  } else {
+    body.append(R.h('p', { class: 'preview-empty', text: '还没有回复。' }));
+  }
+  const foot = R.h('div', { class: 'preview-foot' });
+  foot.append('j/k 滚动 · ', R.h('kbd', { text: 'Enter' }), ' 打开完整页 · ', R.h('kbd', { text: 'Esc' }), ' 关闭');
+  body.append(foot);
+}
+
+/* ---------- 待读队列 ---------- */
+
+const QUEUE_KEY = 'v2r:queue';
+
+function loadQueue() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+    if (!Array.isArray(raw)) return [];
+    return raw.filter(function (item) { return item && Number(item.id) > 0; }).map(function (item) {
+      return {
+        id: Number(item.id),
+        title: String(item.title || ''),
+        node: String(item.node || ''),
+        nodeTitle: String(item.nodeTitle || ''),
+        author: String(item.author || ''),
+        replies: Number(item.replies) || 0,
+        createdAt: Number(item.createdAt) || 0,
+        addedAt: Number(item.addedAt) || Date.now(),
+      };
+    });
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveQueue() {
+  try { localStorage.setItem(QUEUE_KEY, JSON.stringify(state.queue)); } catch (error) { /* ignore */ }
+}
+
+function queueIndexById(id) {
+  return state.queue.findIndex(function (item) { return Number(item.id) === Number(id); });
+}
+
+function updateQueueUi() {
+  const button = document.getElementById('queue-state');
+  if (!button) return;
+  button.textContent = '待读 ' + state.queue.length;
+  button.classList.toggle('on', state.queue.length > 0);
+  button.title = state.queue.length
+    ? '待读队列：' + state.queue.slice(0, 6).map(function (item) { return item.title; }).join(' / ')
+    : '待读队列 (Q)';
+}
+
+function toggleQueueCurrent() {
+  const entry = state.entries[state.selection];
+  if (!entry) {
+    toast('没有选中的主题', 'error');
+    return;
+  }
+  const id = Number(entry.id);
+  const index = queueIndexById(id);
+  if (index >= 0) {
+    state.queue.splice(index, 1);
+    toast('已移出待读', 'ok');
+  } else {
+    state.queue.push({
+      id: id,
+      title: entry.title || '',
+      node: entry.node || '',
+      nodeTitle: entry.nodeTitle || '',
+      author: entry.author || '',
+      replies: Number(entry.replies) || 0,
+      createdAt: Number(entry.createdAt) || 0,
+      addedAt: Math.floor(Date.now() / 1000),
+    });
+    toast('已加入待读（' + state.queue.length + '）', 'ok');
+  }
+  saveQueue();
+  updateQueueUi();
+}
+
+function openQueue() {
+  if (!state.route || state.route.view !== 'list') {
+    toast('待读队列请在列表视图打开', 'error');
+    return;
+  }
+  closePreview();
+  state.queueOpen = true;
+  state.queueIndex = clamp(state.queueIndex, 0, Math.max(0, state.queue.length - 1));
+  const overlay = document.getElementById('queue-overlay');
+  if (overlay) overlay.classList.remove('hidden');
+  renderQueue();
+}
+
+function closeQueue() {
+  state.queueOpen = false;
+  const overlay = document.getElementById('queue-overlay');
+  if (overlay) overlay.classList.add('hidden');
+}
+
+function moveQueue(delta) {
+  if (!state.queue.length) return;
+  state.queueIndex = clamp(state.queueIndex + delta, 0, state.queue.length - 1);
+  renderQueue();
+}
+
+function renderQueue() {
+  const body = document.getElementById('queue-body');
+  const sub = document.getElementById('queue-sub');
+  if (!body) return;
+  R.clear(body);
+  if (sub) sub.textContent = state.queue.length + ' 个';
+  if (!state.queue.length) {
+    body.append(R.h('div', { class: 'queue-empty', text: '队列为空。在列表里按 a 添加当前帖子。' }));
+    return;
+  }
+  if (state.queueIndex >= state.queue.length) state.queueIndex = state.queue.length - 1;
+  if (state.queueIndex < 0) state.queueIndex = 0;
+  state.queue.forEach(function (item, index) {
+    const row = R.h('div', { class: 'queue-row' + (index === state.queueIndex ? ' current' : ''), 'data-queue-i': index });
+    row.append(
+      R.h('span', { class: 'q-idx', text: String(index + 1) }),
+      R.h('span', { class: 'q-main' }, R.h('span', { class: 'q-title', text: item.title || ('主题 #' + item.id) }), R.h('span', { class: 'q-sub', text: '#' + (item.node || '') + ' · ' + (item.author || '') + ' · ' + (item.replies || 0) + ' 回复' })),
+      R.h('span', { class: 'q-del', text: 'x' })
+    );
+    row.addEventListener('click', function (event) {
+      state.queueIndex = index;
+      if (event.target.closest('.q-del')) removeQueueSelected();
+      else renderQueue();
+    });
+    body.append(row);
+  });
+  body.append(R.h('div', { class: 'preview-foot', style: 'padding:10px 18px 14px' }, 'j/k 选择 · ', R.h('kbd', { text: 'Enter' }), ' 打开 · ', R.h('kbd', { text: 'p' }), ' 预览 · ', R.h('kbd', { text: 'x' }), ' 移除 · ', R.h('kbd', { text: 'Esc' }), ' 关闭'));
+  const current = body.querySelector('.queue-row.current');
+  if (current) current.scrollIntoView({ block: 'nearest' });
+}
+
+function openQueueSelected() {
+  const item = state.queue[state.queueIndex];
+  if (!item) {
+    toast('待读队列为空', 'error');
+    return;
+  }
+  closeQueue();
+  navigate({ view: 'topic', id: item.id, page: 1 });
+}
+
+function previewQueueSelected() {
+  const item = state.queue[state.queueIndex];
+  if (!item) return;
+  closeQueue();
+  openPreview(item.id);
+}
+
+function removeQueueSelected() {
+  if (!state.queue.length) return;
+  state.queue.splice(state.queueIndex, 1);
+  saveQueue();
+  updateQueueUi();
+  if (state.queueIndex >= state.queue.length) state.queueIndex = Math.max(0, state.queue.length - 1);
+  renderQueue();
 }
 
 function currentListPage() {
@@ -1664,6 +1946,10 @@ async function runCommand(line) {
       return reloadCurrent({ force: false });
     case 'wide':
       return toggleTopicWide();
+    case 'preview':
+      return openPreviewSelected();
+    case 'queue':
+      return openQueue();
     case 'theme': {
       const theme = rest[0];
       if (theme === 'dark' || theme === 'light') setTheme(theme);
@@ -1992,31 +2278,134 @@ function startTimers() {
 
 /* ---------- 键绑定 ---------- */
 
+function listDown(count) {
+  if (state.previewOpen) return scrollPreview(90 * Math.abs(count || 1));
+  if (state.queueOpen) return moveQueue(count);
+  moveList(count);
+}
+
+function listUp(count) {
+  if (state.previewOpen) return scrollPreview(-90 * Math.abs(count || 1));
+  if (state.queueOpen) return moveQueue(-count);
+  moveList(-count);
+}
+
+function listTop() {
+  if (state.previewOpen) {
+    const body = document.getElementById('preview-body');
+    if (body) body.scrollTop = 0;
+    return;
+  }
+  if (state.queueOpen) {
+    state.queueIndex = 0;
+    renderQueue();
+    return;
+  }
+  if (!state.selectable.length) return;
+  state.selection = state.selectable[0];
+  paintListSelection(false);
+  $('#main').scrollTop = 0;
+}
+
+function listBottom() {
+  if (state.previewOpen) {
+    const body = document.getElementById('preview-body');
+    if (body) body.scrollTop = body.scrollHeight;
+    return;
+  }
+  if (state.queueOpen) {
+    state.queueIndex = Math.max(0, state.queue.length - 1);
+    renderQueue();
+    return;
+  }
+  if (!state.selectable.length) return;
+  state.selection = state.selectable[state.selectable.length - 1];
+  paintListSelection(true);
+}
+
+function listPage(delta) {
+  if (state.previewOpen) {
+    const body = document.getElementById('preview-body');
+    const height = body ? body.clientHeight : 600;
+    const ratio = Math.abs(delta) > 20 ? 0.9 : 0.5;
+    return scrollPreview(Math.sign(delta) * height * ratio);
+  }
+  if (state.queueOpen) return moveQueue(delta > 0 ? 5 : -5);
+  moveList(delta);
+}
+
+function listOpen() {
+  if (state.queueOpen) return openQueueSelected();
+  if (state.previewOpen) return openPreviewFull();
+  return openSelectedTopic();
+}
+
+function listTogglePreview() {
+  if (state.previewOpen) return closePreview();
+  if (state.queueOpen) return previewQueueSelected();
+  return openPreviewSelected();
+}
+
+function listToggleQueue() {
+  if (state.queueOpen) return;
+  if (state.previewOpen) {
+    const topic = state.previewData && state.previewData.topic;
+    if (!topic) return;
+    const id = Number(topic.id);
+    const index = queueIndexById(id);
+    if (index >= 0) {
+      state.queue.splice(index, 1);
+      toast('已移出待读', 'ok');
+    } else {
+      state.queue.push({
+        id: id,
+        title: topic.title || '',
+        node: topic.node || '',
+        nodeTitle: topic.nodeTitle || '',
+        author: topic.author || '',
+        replies: Number(topic.replies) || 0,
+        createdAt: Number(topic.createdAt) || 0,
+        addedAt: Math.floor(Date.now() / 1000),
+      });
+      toast('已加入待读（' + state.queue.length + '）', 'ok');
+    }
+    saveQueue();
+    updateQueueUi();
+    return;
+  }
+  toggleQueueCurrent();
+}
+
+function listQueueToggle() {
+  if (state.queueOpen) closeQueue();
+  else openQueue();
+}
+
+function listQuit() {
+  if (state.queueOpen) return closeQueue();
+  if (state.previewOpen) return closePreview();
+  return goBack();
+}
+
 function listBindings() {
   return {
-    'j': function (count) { moveList(count); },
-    'k': function (count) { moveList(-count); },
-    'g g': function () {
-      if (!state.selectable.length) return;
-      state.selection = state.selectable[0];
-      paintListSelection(false);
-      $('#main').scrollTop = 0;
-    },
-    'G': function () {
-      if (!state.selectable.length) return;
-      state.selection = state.selectable[state.selectable.length - 1];
-      paintListSelection(true);
-    },
-    'ctrl+d': function () { moveList(Math.max(4, Math.floor(visibleRows() / 2))); },
-    'ctrl+u': function () { moveList(-Math.max(4, Math.floor(visibleRows() / 2))); },
-    'ctrl+f': function () { moveList(Math.max(8, visibleRows())); },
-    'ctrl+b': function () { moveList(-Math.max(8, visibleRows())); },
-    'enter': openSelectedTopic,
-    'space': openSelectedTopic,
-    'l': openSelectedTopic,
-    'o': openSelectedTopic,
-    'h': goBack,
-    'q': goBack,
+    'j': function (count) { listDown(count); },
+    'k': function (count) { listUp(count); },
+    'g g': listTop,
+    'G': listBottom,
+    'ctrl+d': function () { listPage(Math.max(4, Math.floor(visibleRows() / 2))); },
+    'ctrl+u': function () { listPage(-Math.max(4, Math.floor(visibleRows() / 2))); },
+    'ctrl+f': function () { listPage(Math.max(8, visibleRows())); },
+    'ctrl+b': function () { listPage(-Math.max(8, visibleRows())); },
+    'enter': listOpen,
+    'space': listOpen,
+    'l': listOpen,
+    'o': listOpen,
+    'p': listTogglePreview,
+    'a': listToggleQueue,
+    'Q': listQueueToggle,
+    'h': listQuit,
+    'q': listQuit,
     'H': function () { goHistory(-1); },
     'ctrl+l': function () { goHistory(1); },
     'g l': openLoginPanel,
@@ -2029,9 +2418,9 @@ function listBindings() {
     'N': function () { jumpMatch(-1); },
     'y': copyCurrentLink,
     'b': openBlockMenu,
-    'x': blockCurrentTopic,
     'u': blockCurrentAuthor,
     'm': toggleReadCurrent,
+    'x': function () { if (state.queueOpen) removeQueueSelected(); else blockCurrentTopic(); },
     '?': openHelpOverlay,
     ':': openPalette,
     '\\': toggleSidebar,
@@ -2091,6 +2480,14 @@ function openHelpOverlay() {
 }
 
 function handleEscape() {
+  if (state.queueOpen) {
+    closeQueue();
+    return;
+  }
+  if (state.previewOpen) {
+    closePreview();
+    return;
+  }
   if (state.route && state.route.view === 'topic' && state.summaryOpen) {
     state.summaryOpen = false;
     paintSummary();
@@ -2115,6 +2512,16 @@ function bindShell() {
   const manageNodesBtn = document.getElementById('nodes-manage-btn');
   if (manageNodesBtn) manageNodesBtn.addEventListener('click', openNodeManagerView);
   document.getElementById('sidebar-backdrop').addEventListener('click', closeDrawer);
+  const previewClose = document.getElementById('preview-close');
+  if (previewClose) previewClose.addEventListener('click', closePreview);
+  const queueClose = document.getElementById('queue-close');
+  if (queueClose) queueClose.addEventListener('click', closeQueue);
+  const queueState = document.getElementById('queue-state');
+  if (queueState) queueState.addEventListener('click', openQueue);
+  const queueOverlay = document.getElementById('queue-overlay');
+  if (queueOverlay) queueOverlay.addEventListener('click', function (event) {
+    if (event.target === queueOverlay) closeQueue();
+  });
   document.getElementById('main').addEventListener('scroll', function () {
     if (state.route && state.route.view === 'topic') requestAnimationFrame(updateFocusCursor);
   });
@@ -2238,6 +2645,8 @@ function onGlobalKey(event) {
 
 async function boot() {
   initLightbox();
+  state.queue = loadQueue();
+  updateQueueUi();
   applyTheme(store.theme());
   try { applyWideReading(localStorage.getItem('v2r:wide') === '1'); } catch (e) { /* ignore */ }
   setSidebarWidth(store.sidebarWidth());
