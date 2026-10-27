@@ -8,7 +8,6 @@ import (
 
 const (
 	cacheRetentionDays = 3
-	cacheArchiveDays   = 30
 	cacheAuxRetention  = 30 * 24 * time.Hour
 	cachePrefetchBatch = 200
 	cacheMaintInterval = 5 * time.Minute
@@ -56,12 +55,6 @@ func (s *Service) pruneOldCache(ctx context.Context) {
 		s.log.Warn("topic cache purge failed", "err", err)
 		return
 	}
-	archiveCutoff := start.AddDate(0, 0, -(cacheArchiveDays - 1))
-	archived, err := s.st.PurgeArchiveBefore(ctx, archiveCutoff.Unix())
-	if err != nil {
-		s.log.Warn("archive purge failed", "err", err)
-		return
-	}
 	summaryCutoff := time.Now().Add(-summaryTTL).Unix()
 	summaries, err := s.st.PurgeSummariesBefore(ctx, summaryCutoff)
 	if err != nil {
@@ -80,12 +73,11 @@ func (s *Service) pruneOldCache(ctx context.Context) {
 		return
 	}
 	s.metaSetInt(ctx, cachePruneMetaKey, start.Unix())
-	if removed > 0 || archived > 0 || summaries > 0 || nodes > 0 || feeds > 0 {
+	if removed > 0 || summaries > 0 || nodes > 0 || feeds > 0 {
 		s.log.Info("cache purged",
-			"topic_bodies", removed, "archive_topics", archived, "summaries", summaries,
+			"topic_bodies", removed, "summaries", summaries,
 			"nodes", nodes, "feed_states", feeds,
-			"content_cutoff", contentCutoff.Format("2006-01-02"),
-			"archive_cutoff", archiveCutoff.Format("2006-01-02"))
+			"content_cutoff", contentCutoff.Format("2006-01-02"))
 	}
 }
 

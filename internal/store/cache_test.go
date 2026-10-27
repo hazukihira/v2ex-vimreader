@@ -90,9 +90,6 @@ func TestPurgeOtherCacheLayers(t *testing.T) {
 	st := openTestStore(t)
 	now := time.Now().Unix()
 	old := now - 40*24*3600
-	if err := st.UpsertTopic(ctx, model.Topic{ID: 21, Node: "tech", CreatedAt: old, ContentHTML: "<p>old</p>", FetchedAt: now}); err != nil {
-		t.Fatal(err)
-	}
 	if err := st.UpsertNodes(ctx, []model.Node{{Name: "oldnode", Title: "old"}}); err != nil {
 		t.Fatal(err)
 	}
@@ -101,9 +98,6 @@ func TestPurgeOtherCacheLayers(t *testing.T) {
 	}
 	if err := st.SaveFeedState(ctx, FeedState{Key: "oldfeed", LastChecked: old, LastSuccess: old}); err != nil {
 		t.Fatal(err)
-	}
-	if n, err := st.PurgeArchiveBefore(ctx, now-30*24*3600); err != nil || n != 1 {
-		t.Fatalf("archive purge n=%d err=%v", n, err)
 	}
 	if err := st.PutSummary(ctx, 21, "m", "summary"); err != nil {
 		t.Fatal(err)
