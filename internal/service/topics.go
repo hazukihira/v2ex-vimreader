@@ -48,11 +48,6 @@ func (s *Service) loadTopic(ctx context.Context, id int64, page int, refresh boo
 		}
 		topic = parsed.Topic
 		pages = parsed.Pages
-		if parsed.Pages > 1 {
-			if _, err := s.fetchTopicPage(ctx, id, parsed.Pages); err != nil {
-				s.log.Warn("refresh last reply page failed", "id", id, "err", err)
-			}
-		}
 	}
 	if page > pages {
 		page = pages

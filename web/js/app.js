@@ -298,6 +298,7 @@ function beginLoad() {
 function endLoad() {
   state.loading = Math.max(0, state.loading - 1);
   if (state.loading > 0) return;
+  cancelLoadingTimer();
   const bar = $('#progress');
   bar.classList.add('done');
   setTimeout(function () {
@@ -524,12 +525,33 @@ async function loadBlocks() {
   }
 }
 
+let loadingTimer = 0;
+
+function cancelLoadingTimer() {
+  if (!loadingTimer) return;
+  clearTimeout(loadingTimer);
+  loadingTimer = 0;
+}
+
 function renderLoading(text) {
   const view = $('#view');
   R.clear(view);
   const box = R.h('div', { class: 'loading' });
   box.append(R.h('span', { class: 'spinner' }), R.h('span', { text: text || '加载中…' }));
   view.append(box);
+}
+
+function scheduleLoading(text) {
+  cancelLoadingTimer();
+  const view = $('#view');
+  if (!view || !view.children.length) {
+    renderLoading(text);
+    return;
+  }
+  loadingTimer = setTimeout(function () {
+    loadingTimer = 0;
+    if (state.loading > 0) renderLoading(text);
+  }, 160);
 }
 
 async function show(route) {
@@ -560,7 +582,7 @@ async function show(route) {
   state.streaming = false;
   state.summarySeq += 1;
   setMsg('');
-  renderLoading(route.view === 'list' ? '加载列表…' : '加载主题…');
+  scheduleLoading(route.view === 'list' ? '加载列表…' : '加载主题…');
   updateChrome();
   updateEngine();
   if (route.view === 'list') {
@@ -618,7 +640,7 @@ async function loadList(route, options) {
     if (error.code !== 'aborted' && seq === state.reqSeq) handleLoadError(error);
     return false;
   } finally {
-    if (seq === state.reqSeq) endLoad();
+    endLoad();
   }
 }
 
@@ -689,7 +711,7 @@ async function loadTopic(route, options) {
     if (error.code !== 'aborted' && seq === state.reqSeq) handleLoadError(error);
     return false;
   } finally {
-    if (seq === state.reqSeq) endLoad();
+    endLoad();
   }
 }
 
