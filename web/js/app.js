@@ -32,6 +32,8 @@ const state = {
   replyEls: [],
   selectable: [],
   selection: -1,
+  paintedSelection: -1,
+  filtered: new Set(),
   topicSelection: -1,
   filter: '',
   summary: null,
@@ -767,7 +769,15 @@ function renderListView(route) {
     loginHint: loginHint,
   });
   state.rowEls = handled.rows;
+  state.paintedSelection = state.selection;
   state.selectable = handled.matches;
+  state.filtered = new Set();
+  if (state.filter) {
+    const visible = new Set(state.selectable);
+    state.rowEls.forEach(function (row, index) {
+      if (!visible.has(index)) state.filtered.add(index);
+    });
+  }
   updateFilterInfo();
   updateStatusContext();
 }
@@ -783,12 +793,12 @@ function clampSelection(index) {
 
 function paintListSelection(scroll) {
   if (!state.rowEls) return;
-  state.rowEls.forEach(function (row, index) {
-    row.classList.toggle('current', index === state.selection);
-  });
   const row = state.rowEls[state.selection];
+  const previous = state.rowEls[state.paintedSelection];
+  if (previous && previous !== row) previous.classList.remove('current');
+  if (row && !row.classList.contains('current')) row.classList.add('current');
+  state.paintedSelection = state.selection;
   if (row && scroll !== false) row.scrollIntoView({ block: 'nearest' });
-  updateStatusContext();
 }
 
 function setListSelection(index) {
@@ -823,8 +833,14 @@ function openSelectedTopic() {
 function closePreview() {
   state.previewOpen = false;
   state.previewSeq += 1;
+  state.previewData = null;
+  state.previewId = 0;
   const panel = document.getElementById('preview-panel');
   if (panel) panel.classList.add('hidden');
+  const body = document.getElementById('preview-body');
+  if (body) R.clear(body);
+  const title = document.getElementById('preview-title');
+  if (title) title.textContent = '';
 }
 
 function openPreview(id) {
@@ -908,6 +924,7 @@ function renderPreview(data) {
   const replies = data.replies || [];
   if (replies.length) {
     const list = R.h('div', { class: 'preview-replies' });
+    const fragment = document.createDocumentFragment();
     replies.forEach(function (reply) {
       const row = R.h('article', { class: 'preview-reply' });
       const rmeta = R.h('div', { class: 'preview-reply-meta' });
@@ -920,8 +937,9 @@ function renderPreview(data) {
       const content = R.h('div', { class: 'preview-content' });
       content.innerHTML = reply.contentHtml || '';
       row.append(rmeta, content);
-      list.append(row);
+      fragment.append(row);
     });
+    list.append(fragment);
     body.append(list);
   } else {
     body.append(R.h('p', { class: 'preview-empty', text: '还没有回复。' }));
@@ -1019,12 +1037,26 @@ function closeQueue() {
   state.queueOpen = false;
   const overlay = document.getElementById('queue-overlay');
   if (overlay) overlay.classList.add('hidden');
+  const body = document.getElementById('queue-body');
+  if (body) R.clear(body);
+}
+
+function paintQueueSelection() {
+  const body = document.getElementById('queue-body');
+  if (!body) return;
+  const previous = body.querySelector('.queue-row.current');
+  if (previous) previous.classList.remove('current');
+  const row = body.querySelector('.queue-row[data-queue-i="' + state.queueIndex + '"]');
+  if (row) {
+    row.classList.add('current');
+    row.scrollIntoView({ block: 'nearest' });
+  }
 }
 
 function moveQueue(delta) {
   if (!state.queue.length) return;
   state.queueIndex = clamp(state.queueIndex + delta, 0, state.queue.length - 1);
-  renderQueue();
+  paintQueueSelection();
 }
 
 function renderQueue() {
@@ -1123,14 +1155,26 @@ function applyFilter(term) {
   state.filter = term;
   state.selectable = R.computeMatches(state.entries, term);
   const matchSet = new Set(state.selectable);
-  state.rowEls.forEach(function (row, index) {
-    row.classList.toggle('filtered', Boolean(term) && !matchSet.has(index));
+  const previous = state.filtered || new Set();
+  const next = new Set();
+  if (term) {
+    state.rowEls.forEach(function (row, index) {
+      if (!matchSet.has(index)) next.add(index);
+    });
+  }
+  previous.forEach(function (index) {
+    if (!next.has(index) && state.rowEls[index]) state.rowEls[index].classList.remove('filtered');
   });
+  next.forEach(function (index) {
+    if (!previous.has(index) && state.rowEls[index]) state.rowEls[index].classList.add('filtered');
+  });
+  state.filtered = next;
   if (!matchSet.has(state.selection)) {
     state.selection = state.selectable.length ? state.selectable[0] : -1;
   }
   paintListSelection(Boolean(term));
   updateFilterInfo();
+  updateStatusContext();
   if (state.route) store.saveFilter(listFilterKey(state.route), term);
 }
 
@@ -1279,7 +1323,7 @@ function scrollTopicStep(delta) {
 function setFloorSelection(index) {
   state.topicSelection = index;
   R.paintTopicSelection($('#view'), index);
-  updateStatusContext();
+  updateStatusContext(true);
   updateFocusCursor();
 }
 
@@ -2056,7 +2100,7 @@ function hints() {
   return 'j/k 楼层 · [ ] 翻页 · t 最新 · s 总结 · i 图片 · b 屏蔽 · q 返回 · ? 帮助';
 }
 
-function updateStatusContext() {
+function updateStatusContext(contextOnly) {
   const context = $('#st-context');
   if (context) {
     context.textContent = '';
@@ -2072,6 +2116,7 @@ function updateStatusContext() {
       context.append(document.createTextNode(' · ' + (reply ? '#' + reply.floor : '主楼')));
     }
   }
+  if (contextOnly) return;
   const page = $('#st-page');
   if (page) page.textContent = pageInfo();
   const hint = $('#st-hint');

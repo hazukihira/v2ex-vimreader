@@ -200,10 +200,12 @@ export function renderList(view, ctx) {
 
   const entries = ctx.entries || [];
   const filter = ctx.filter || '';
-  const matches = computeMatches(entries, filter);
-  const matchSet = new Set(matches);
+  const hasFilter = Boolean(filter);
+  const matchSet = hasFilter ? new Set(computeMatches(entries, filter)) : null;
+  const matches = [];
   const rowsEl = h('div', { class: 'list-rows', role: 'list' });
   const rows = [];
+  const fragment = document.createDocumentFragment();
 
   entries.forEach(function (entry, index) {
     const read = ctx.readSet && (ctx.readSet.has(entry.id) || ctx.readSet.has(String(entry.id)));
@@ -236,10 +238,12 @@ export function renderList(view, ctx) {
       text: fmtTime(touched, entry.createdKnown),
       title: (entry.createdAt ? '创建 ' + fmtDateTime(entry.createdAt) : '创建时间未知') + (touched ? ' · 最后回复 ' + fmtDateTime(touched) : ''),
     }));
-    if (filter && !matchSet.has(index)) row.classList.add('filtered');
+    if (hasFilter && !matchSet.has(index)) row.classList.add('filtered');
+    else matches.push(index);
     rows.push(row);
-    rowsEl.append(row);
+    fragment.append(row);
   });
+  rowsEl.append(fragment);
 
   if (!entries.length) {
     addEmpty(wrap, ctx);
@@ -422,6 +426,7 @@ export function renderTopic(view, ctx) {
 
   const repliesEl = h('div', { class: 'replies' });
   const replyEls = [];
+  const replyFragment = document.createDocumentFragment();
   (ctx.replies || []).forEach(function (reply, index) {
     const article = h('article', {
       class: 'reply' + (reply.isOp ? ' by-op' : '') + (index === ctx.selected ? ' current' : ''),
@@ -444,9 +449,10 @@ export function renderTopic(view, ctx) {
     body.innerHTML = reply.contentHtml || '';
     decorateContent(body);
     article.append(meta, body);
-    repliesEl.append(article);
+    replyFragment.append(article);
     replyEls.push(article);
   });
+  repliesEl.append(replyFragment);
   if (!replyEls.length) {
     const total = replyCount(topic);
     const text = total === 0
@@ -479,10 +485,10 @@ function buildTopicFoot(ctx) {
 }
 
 export function paintTopicSelection(view, index) {
-  const op = view.querySelector('#op-block');
-  if (op) op.classList.toggle('current', index < 0);
-  const nodes = view.querySelectorAll('.reply');
-  nodes.forEach(function (node, i) { node.classList.toggle('current', i === index); });
+  const previous = view.querySelector('.reply.current, #op-block.current');
+  if (previous) previous.classList.remove('current');
+  const target = index < 0 ? view.querySelector('#op-block') : view.querySelector('.reply[data-i="' + index + '"]');
+  if (target) target.classList.add('current');
 }
 
 export function renderFollowedNodes(container, nodes, followed, activeNode) {
