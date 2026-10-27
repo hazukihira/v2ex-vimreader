@@ -84,3 +84,40 @@ func TestTopicIDsForWarmupSkipsFetchedPages(t *testing.T) {
 		}
 	}
 }
+
+func TestPurgeOtherCacheLayers(t *testing.T) {
+	ctx := context.Background()
+	st := openTestStore(t)
+	now := time.Now().Unix()
+	old := now - 40*24*3600
+	if err := st.UpsertTopic(ctx, model.Topic{ID: 21, Node: "tech", CreatedAt: old, ContentHTML: "<p>old</p>", FetchedAt: now}); err != nil {
+		t.Fatal(err)
+	}
+	if err := st.UpsertNodes(ctx, []model.Node{{Name: "oldnode", Title: "old"}}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := st.db.ExecContext(ctx, "UPDATE nodes SET fetched_at = ? WHERE name = 'oldnode'", old); err != nil {
+		t.Fatal(err)
+	}
+	if err := st.SaveFeedState(ctx, FeedState{Key: "oldfeed", LastChecked: old, LastSuccess: old}); err != nil {
+		t.Fatal(err)
+	}
+	if n, err := st.PurgeArchiveBefore(ctx, now-30*24*3600); err != nil || n != 1 {
+		t.Fatalf("archive purge n=%d err=%v", n, err)
+	}
+	if err := st.PutSummary(ctx, 21, "m", "summary"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := st.db.ExecContext(ctx, "UPDATE summaries SET created_at = ? WHERE topic_id = 21", old); err != nil {
+		t.Fatal(err)
+	}
+	if n, err := st.PurgeNodesBefore(ctx, now-30*24*3600); err != nil || n != 1 {
+		t.Fatalf("node purge n=%d err=%v", n, err)
+	}
+	if n, err := st.PurgeFeedStatesBefore(ctx, now-30*24*3600); err != nil || n != 1 {
+		t.Fatalf("feed purge n=%d err=%v", n, err)
+	}
+	if n, err := st.PurgeSummariesBefore(ctx, now-24*3600); err != nil || n != 1 {
+		t.Fatalf("summary purge n=%d err=%v", n, err)
+	}
+}

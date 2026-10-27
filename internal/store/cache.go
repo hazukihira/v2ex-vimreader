@@ -67,3 +67,64 @@ func (s *Store) PurgeTopicCacheBefore(ctx context.Context, cutoff int64) (int64,
 	}
 	return removed, nil
 }
+
+// PurgeArchiveBefore deletes old topic metadata and replies. This keeps the
+// archive table bounded; day/new views only cover the retained window.
+func (s *Store) PurgeArchiveBefore(ctx context.Context, cutoff int64) (int64, error) {
+	const effectiveTime = `CASE WHEN created_at > 0 THEN created_at WHEN feed_at > 0 THEN feed_at ELSE fetched_at END`
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return 0, err
+	}
+	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `
+		DELETE FROM summaries
+		WHERE topic_id IN (SELECT id FROM topics WHERE `+effectiveTime+` < ?)`, cutoff); err != nil {
+		return 0, err
+	}
+	if _, err := tx.ExecContext(ctx, `
+		DELETE FROM replies
+		WHERE topic_id IN (SELECT id FROM topics WHERE `+effectiveTime+` < ?)`, cutoff); err != nil {
+		return 0, err
+	}
+	result, err := tx.ExecContext(ctx, "DELETE FROM topics WHERE "+effectiveTime+" < ?", cutoff)
+	if err != nil {
+		return 0, err
+	}
+	removed, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+	if err := tx.Commit(); err != nil {
+		return 0, err
+	}
+	return removed, nil
+}
+
+// PurgeSummariesBefore drops AI summaries whose cache entry is older than cutoff.
+func (s *Store) PurgeSummariesBefore(ctx context.Context, cutoff int64) (int64, error) {
+	result, err := s.db.ExecContext(ctx, "DELETE FROM summaries WHERE created_at < ?", cutoff)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+// PurgeNodesBefore drops node-directory entries not refreshed since cutoff.
+func (s *Store) PurgeNodesBefore(ctx context.Context, cutoff int64) (int64, error) {
+	result, err := s.db.ExecContext(ctx, "DELETE FROM nodes WHERE fetched_at < ?", cutoff)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+// PurgeFeedStatesBefore drops conditional-request state for feeds that have not
+// been checked since cutoff.
+func (s *Store) PurgeFeedStatesBefore(ctx context.Context, cutoff int64) (int64, error) {
+	result, err := s.db.ExecContext(ctx, "DELETE FROM feed_state WHERE last_checked < ?", cutoff)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}

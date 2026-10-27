@@ -54,6 +54,9 @@ type Service struct {
 
 	cancel context.CancelFunc
 	wg     sync.WaitGroup
+
+	prefetchMu     sync.Mutex
+	prefetchFailed map[int64]time.Time
 }
 
 // New creates the service.

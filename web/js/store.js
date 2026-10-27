@@ -2,6 +2,7 @@
 
 const PREFIX = 'v2r:';
 const READ_LIMIT = 6000;
+const CACHE_TTL = 90 * 24 * 3600;
 
 function readRaw(key, fallback) {
   try {
@@ -32,8 +33,16 @@ export const store = {
   },
 
   readSet() {
-    const obj = readRaw('read', {});
-    return new Set(Object.keys(obj || {}));
+    const obj = readRaw('read', {}) || {};
+    const now = Math.floor(Date.now() / 1000);
+    const keys = [];
+    for (const key of Object.keys(obj)) {
+      const stamp = Number(obj[key]) || 0;
+      if (!stamp || now - stamp > CACHE_TTL) delete obj[key];
+      else keys.push(key);
+    }
+    writeRaw('read', obj);
+    return new Set(keys);
   },
 
   setRead(id, on) {
@@ -60,16 +69,17 @@ export const store = {
   },
 
   savePosition(key, index, scroll) {
-    writeRaw('pos:' + key, { i: index, s: Math.max(0, Math.round(scroll || 0)) });
+    writeRaw('pos:' + key, { i: index, s: Math.max(0, Math.round(scroll || 0)), t: Math.floor(Date.now() / 1000) });
   },
 
   filter(key) {
     const value = readRaw('filter:' + key, '');
-    return typeof value === 'string' ? value : '';
+    if (typeof value === 'string') return value;
+    return value && typeof value === 'object' && typeof value.v === 'string' ? value.v : '';
   },
 
   saveFilter(key, term) {
-    if (term) writeRaw('filter:' + key, term);
+    if (term) writeRaw('filter:' + key, { v: term, t: Math.floor(Date.now() / 1000) });
     else {
       try {
         localStorage.removeItem(PREFIX + 'filter:' + key);
@@ -92,6 +102,39 @@ export const store = {
 
   saveSidebarCollapsed(collapsed) {
     writeRaw('sidebarCollapsed', collapsed === true);
+  },
+
+  pruneCache() {
+    const now = Math.floor(Date.now() / 1000);
+    const keys = [];
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(PREFIX)) keys.push(key);
+      }
+      for (const fullKey of keys) {
+        const isPos = fullKey.startsWith(PREFIX + 'pos:');
+        const isFilter = fullKey.startsWith(PREFIX + 'filter:');
+        if (!isPos && !isFilter) continue;
+        let value;
+        try { value = JSON.parse(localStorage.getItem(fullKey)); } catch (e) { value = null; }
+        if (isFilter && typeof value === 'string') {
+          localStorage.setItem(fullKey, JSON.stringify({ v: value, t: now }));
+          continue;
+        }
+        if (!value || typeof value !== 'object') {
+          localStorage.removeItem(fullKey);
+          continue;
+        }
+        const stamp = Number(value.t) || 0;
+        if (!stamp) {
+          value.t = now;
+          localStorage.setItem(fullKey, JSON.stringify(value));
+        } else if (now - stamp > CACHE_TTL) {
+          localStorage.removeItem(fullKey);
+        }
+      }
+    } catch (e) {}
   },
 
   clearCache() {

@@ -1155,7 +1155,6 @@ function removeQueueSelected() {
 /* ---------- 本地收藏 ---------- */
 
 const FAVORITES_KEY = 'v2r:favorites';
-const FAVORITES_LIMIT = 500;
 
 function loadFavorites() {
   try {
@@ -1172,7 +1171,7 @@ function loadFavorites() {
         createdAt: Number(item.createdAt) || 0,
         addedAt: Number(item.addedAt) || Math.floor(Date.now() / 1000),
       };
-    }).slice(0, FAVORITES_LIMIT);
+    });
   } catch (error) {
     return [];
   }
@@ -1246,7 +1245,6 @@ function toggleFavoriteCurrent() {
     toast('已取消收藏', 'ok');
   } else {
     state.favorites.unshift(item);
-    if (state.favorites.length > FAVORITES_LIMIT) state.favorites.length = FAVORITES_LIMIT;
     toast('已收藏（' + state.favorites.length + '）', 'ok');
   }
   saveFavorites();
@@ -2975,6 +2973,7 @@ function onGlobalKey(event) {
 
 async function boot() {
   initLightbox();
+  store.pruneCache();
   state.queue = loadQueue();
   updateQueueUi();
   state.favorites = loadFavorites();
