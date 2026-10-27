@@ -118,7 +118,10 @@ function openOverlay(options) {
 
   stack.push(entry);
   const built = options.build ? options.build(body, entry) : null;
-  const focusTarget = (typeof options.focus === 'string' ? body.querySelector(options.focus) : null) || built || panel;
+  let focusTarget = (typeof options.focus === 'string' ? body.querySelector(options.focus) : null) || built || panel;
+  // 菜单项 / 列表容器本身不可聚焦，落到容器上的键盘事件会收不到；退回到 panel。
+  const focusable = focusTarget && focusTarget.matches && focusTarget.matches('input, textarea, select, button, a[href], [tabindex], [contenteditable="true"]');
+  if (!focusable) focusTarget = panel;
   if (focusTarget && focusTarget.focus) focusTarget.focus({ preventScroll: true });
   return entry;
 }
