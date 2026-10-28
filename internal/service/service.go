@@ -36,6 +36,7 @@ type Service struct {
 
 	stateMu       sync.Mutex
 	syncing       bool
+	lastUser      int64
 	lastSiteFeed  int64
 	lastNodeFeeds int64
 	lastError     string
@@ -174,6 +175,21 @@ func (s *Service) Status(ctx context.Context) (*StatusResponse, error) {
 		},
 		Archive: ArchiveInfo{From: from, To: to},
 	}, nil
+}
+
+// MarkUserActivity records an interactive request so background prefetch can
+// yield the shared V2EX rate limiter while the user is navigating.
+func (s *Service) MarkUserActivity() {
+	s.stateMu.Lock()
+	s.lastUser = time.Now().Unix()
+	s.stateMu.Unlock()
+}
+
+func (s *Service) userActive() bool {
+	s.stateMu.Lock()
+	last := s.lastUser
+	s.stateMu.Unlock()
+	return last > 0 && time.Now().Unix()-last < 8
 }
 
 // StartBackground launches the incremental sync loops.

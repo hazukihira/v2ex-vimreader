@@ -82,6 +82,9 @@ func (s *Service) pruneOldCache(ctx context.Context) {
 }
 
 func (s *Service) prefetchToday(ctx context.Context) {
+	if s.userActive() {
+		return
+	}
 	start := s.localDayStart(time.Now())
 	ids, err := s.st.TopicIDsForWarmup(ctx, start.Unix(), start.Add(24*time.Hour).Unix(), cachePrefetchBatch)
 	if err != nil {
@@ -101,6 +104,9 @@ func (s *Service) prefetchToday(ctx context.Context) {
 	}
 	s.prefetchMu.Unlock()
 	for _, id := range ids {
+		if s.userActive() {
+			return
+		}
 		select {
 		case <-ctx.Done():
 			return

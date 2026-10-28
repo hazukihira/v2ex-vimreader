@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS topics (
 );
 CREATE INDEX IF NOT EXISTS idx_topics_created ON topics(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_topics_node_created ON topics(node, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_topics_node_last_touched ON topics(node, last_touched_at DESC);
 CREATE INDEX IF NOT EXISTS idx_topics_last_touched ON topics(last_touched_at DESC);
 CREATE INDEX IF NOT EXISTS idx_topics_author ON topics(author);
 CREATE INDEX IF NOT EXISTS idx_topics_feed ON topics(feed_at);

@@ -90,6 +90,58 @@ func (s *Store) CoverageRange(ctx context.Context) (int64, int64, error) {
 	return from.Int64, to.Int64, nil
 }
 
+// ListNode returns archived topics for a node ordered by last activity.
+func (s *Store) ListNode(ctx context.Context, node string, page, pageSize int) ([]model.Topic, int, error) {
+	var total int
+	if err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM topics WHERE node = ? AND created_at > 0", node).Scan(&total); err != nil {
+		return nil, 0, err
+	}
+	rows, err := s.db.QueryContext(ctx, "SELECT "+topicColumns+" FROM topics WHERE node = ? AND created_at > 0 ORDER BY last_touched_at DESC, id DESC LIMIT ? OFFSET ?",
+		node, pageSize, (page-1)*pageSize)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+	out := make([]model.Topic, 0, pageSize)
+	for rows.Next() {
+		t, err := scanTopic(rows)
+		if err != nil {
+			return nil, 0, err
+		}
+		out = append(out, t)
+	}
+	return out, total, rows.Err()
+}
+
+// CountActiveBefore counts topics whose latest activity is older than before.
+func (s *Store) CountActiveBefore(ctx context.Context, before int64) (int, error) {
+	var total int
+	err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM topics WHERE created_at > 0 AND COALESCE(NULLIF(last_touched_at, 0), created_at) < ?", before).Scan(&total)
+	return total, err
+}
+
+// ListActiveBefore returns archived topics older than before in activity order.
+func (s *Store) ListActiveBefore(ctx context.Context, before int64, page, pageSize int) ([]model.Topic, int, error) {
+	var total int
+	if err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM topics WHERE created_at > 0 AND COALESCE(NULLIF(last_touched_at, 0), created_at) < ?", before).Scan(&total); err != nil {
+		return nil, 0, err
+	}
+	rows, err := s.db.QueryContext(ctx, "SELECT "+topicColumns+" FROM topics WHERE created_at > 0 AND COALESCE(NULLIF(last_touched_at, 0), created_at) < ? ORDER BY COALESCE(NULLIF(last_touched_at, 0), created_at) DESC, id DESC LIMIT ? OFFSET ?", before, pageSize, (page-1)*pageSize)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+	out := make([]model.Topic, 0, pageSize)
+	for rows.Next() {
+		t, err := scanTopic(rows)
+		if err != nil {
+			return nil, 0, err
+		}
+		out = append(out, t)
+	}
+	return out, total, rows.Err()
+}
+
 // ListNew returns topics ordered by creation time (newest first), paginated.
 func (s *Store) ListNew(ctx context.Context, page, pageSize int) ([]model.Topic, int, error) {
 	var total int

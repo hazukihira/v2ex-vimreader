@@ -17,6 +17,7 @@ import (
 
 // Topic loads a topic and one page of replies, fetching from V2EX when needed.
 func (s *Service) Topic(ctx context.Context, id int64, page int, refresh bool) (*TopicResponse, error) {
+	s.MarkUserActivity()
 	if id <= 0 {
 		return nil, ErrBadRequest
 	}
@@ -125,6 +126,7 @@ func (s *Service) loadTopic(ctx context.Context, id int64, page int, refresh boo
 
 // Replies returns one page of replies without reloading the topic header.
 func (s *Service) Replies(ctx context.Context, id int64, page int, refresh bool) (*RepliesResponse, error) {
+	s.MarkUserActivity()
 	if id <= 0 {
 		return nil, ErrBadRequest
 	}
