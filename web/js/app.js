@@ -2993,6 +2993,7 @@ function onGlobalKey(event) {
   if (isLightboxOpen() || isOverlayOpen()) return;
   if (event.defaultPrevented) return;
   if (isEditable(event.target)) return;
+  if (event.repeat && event.key === 'x') return;
   if (event.key === 'Escape') {
     handleEscape();
     return;
