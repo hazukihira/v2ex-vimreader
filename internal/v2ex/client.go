@@ -102,7 +102,7 @@ func NewClient(cfg config.FetchConfig, log *slog.Logger) *Client {
 	transport := &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
 		DialContext:           dialer.DialContext,
-		ForceAttemptHTTP2:     true,
+		ForceAttemptHTTP2:     false,
 		MaxIdleConns:          16,
 		MaxIdleConnsPerHost:   8,
 		IdleConnTimeout:       90 * time.Second,
