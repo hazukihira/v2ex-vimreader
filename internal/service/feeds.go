@@ -86,15 +86,22 @@ func (s *Service) nodeFeedsLoop(ctx context.Context) {
 }
 
 func (s *Service) runNodeFeeds(ctx context.Context) {
+	total, ok, failed, topicsTotal := 0, 0, 0, 0
 	for _, node := range s.FollowedNodeNames() {
 		select {
 		case <-ctx.Done():
 			return
 		default:
 		}
-		if err := s.syncNodeFeed(ctx, node); err != nil {
+		topics, err := s.syncNodeFeed(ctx, node)
+		total++
+		if err != nil {
+			failed++
 			s.SetError(err)
 			s.log.Warn("node feed sync failed", "node", node, "err", err)
+		} else {
+			ok++
+			topicsTotal += topics
 		}
 		select {
 		case <-ctx.Done():
@@ -102,7 +109,7 @@ func (s *Service) runNodeFeeds(ctx context.Context) {
 		case <-time.After(900 * time.Millisecond):
 		}
 	}
-	s.markNodeFeedsDone()
+	s.recordNodeFeeds(total, ok, failed, topicsTotal)
 }
 
 func (s *Service) syncSiteFeed(ctx context.Context) error {
@@ -120,7 +127,7 @@ func (s *Service) syncSiteFeed(ctx context.Context) error {
 	}
 	if resp.NotModified {
 		_ = s.st.TouchFeedState(ctx, siteFeedKey)
-		s.markSiteFeedDone()
+		s.recordSiteFeed(0)
 		return nil
 	}
 	if err := resp.Err(); err != nil {
@@ -143,20 +150,20 @@ func (s *Service) syncSiteFeed(ctx context.Context) error {
 	}); err != nil {
 		s.log.Warn("save site feed state failed", "err", err)
 	}
-	s.markSiteFeedDone()
+	s.recordSiteFeed(len(topics))
 	s.log.Info("site feed synced", "topics", len(topics))
 	return nil
 }
 
-func (s *Service) syncNodeFeed(ctx context.Context, node string) error {
+func (s *Service) syncNodeFeed(ctx context.Context, node string) (int, error) {
 	if s.isRestrictedNode(ctx, node) {
 		s.log.Debug("skip restricted node feed", "node", node)
-		return nil
+		return 0, nil
 	}
 	key := "node:" + node
 	state, exists, err := s.st.GetFeedState(ctx, key)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	var options []v2ex.Option
 	if exists {
@@ -164,22 +171,22 @@ func (s *Service) syncNodeFeed(ctx context.Context, node string) error {
 	}
 	resp, err := s.vc.Get(ctx, v2ex.NodeFeedURL(node), options...)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	if resp.NotModified {
 		_ = s.st.TouchFeedState(ctx, key)
-		return nil
+		return 0, nil
 	}
 	if resp.StatusCode == 404 {
 		s.log.Debug("node feed is not available", "node", node)
-		return nil
+		return 0, nil
 	}
 	if err := resp.Err(); err != nil {
-		return err
+		return 0, err
 	}
 	topics, err := v2ex.ParseJSONFeed(resp.Body, node)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	title := s.nodeTitle(ctx, node)
 	for i := range topics {
@@ -199,7 +206,7 @@ func (s *Service) syncNodeFeed(ctx context.Context, node string) error {
 		s.log.Warn("save node feed state failed", "node", node, "err", err)
 	}
 	s.log.Info("node feed synced", "node", node, "topics", len(topics))
-	return nil
+	return len(topics), nil
 }
 
 func (s *Service) storeFeedTopic(ctx context.Context, topic *model.Topic) {

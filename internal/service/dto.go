@@ -29,9 +29,14 @@ type FetcherStatus struct {
 
 // SyncStatus reports background sync progress.
 type SyncStatus struct {
-	LastSiteFeed  int64 `json:"lastSiteFeed"`
-	LastNodeFeeds int64 `json:"lastNodeFeeds"`
-	Running       bool  `json:"running"`
+	LastSiteFeed   int64 `json:"lastSiteFeed"`
+	LastSiteTopics int   `json:"lastSiteTopics"`
+	LastNodeFeeds  int64 `json:"lastNodeFeeds"`
+	LastNodeTopics int   `json:"lastNodeTopics"`
+	NodeFeedTotal  int   `json:"nodeFeedTotal"`
+	NodeFeedOK     int   `json:"nodeFeedOk"`
+	NodeFeedFailed int   `json:"nodeFeedFailed"`
+	Running        bool  `json:"running"`
 }
 
 // LoginStatus is the local V2EX login state. The cookie itself is never exposed.

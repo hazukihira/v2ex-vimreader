@@ -34,12 +34,16 @@ type Service struct {
 
 	flights flightGroup
 
-	stateMu       sync.Mutex
-	syncing       bool
-	lastUser      int64
-	lastSiteFeed  int64
-	lastNodeFeeds int64
-	lastError     string
+	stateMu        sync.Mutex
+	syncing        bool
+	lastUser       int64
+	lastSiteFeed   int64
+	lastSiteTopics int
+	lastNodeFeeds  int64
+	lastNodeTopics int
+	lastNodeOK     int
+	lastNodeFailed int
+	lastError      string
 
 	restricted map[string]struct{}
 
@@ -153,9 +157,35 @@ func (s *Service) Status(ctx context.Context) (*StatusResponse, error) {
 	s.stateMu.Lock()
 	running := s.syncing
 	lastSite := s.lastSiteFeed
+	lastSiteTopics := s.lastSiteTopics
 	lastNode := s.lastNodeFeeds
+	lastNodeTopics := s.lastNodeTopics
+	lastNodeOK := s.lastNodeOK
+	lastNodeFailed := s.lastNodeFailed
 	lastErr := s.lastError
 	s.stateMu.Unlock()
+	// 进程重启后内存时间和计数会清零，用 feed_state 和 meta 恢复。
+	if lastSite == 0 {
+		if state, ok, err := s.st.GetFeedState(ctx, "site:index"); err == nil && ok {
+			lastSite = state.LastSuccess
+		}
+	}
+	if lastSiteTopics == 0 {
+		lastSiteTopics = int(s.metaInt(ctx, "sync.site.last_topics"))
+	}
+	if lastNode == 0 {
+		for _, node := range s.FollowedNodeNames() {
+			state, ok, err := s.st.GetFeedState(ctx, "node:"+node)
+			if err == nil && ok && state.LastSuccess > lastNode {
+				lastNode = state.LastSuccess
+			}
+		}
+	}
+	if lastNodeTopics == 0 {
+		lastNodeTopics = int(s.metaInt(ctx, "sync.nodes.last_topics"))
+		lastNodeOK = int(s.metaInt(ctx, "sync.nodes.last_ok"))
+		lastNodeFailed = int(s.metaInt(ctx, "sync.nodes.last_failed"))
+	}
 	var requests int64
 	if limiter := s.vc.Limiter(); limiter != nil {
 		requests, _ = limiter.Stats()
@@ -169,9 +199,14 @@ func (s *Service) Status(ctx context.Context) (*StatusResponse, error) {
 			LastError:     lastErr,
 		},
 		Sync: SyncStatus{
-			LastSiteFeed:  lastSite,
-			LastNodeFeeds: lastNode,
-			Running:       running,
+			LastSiteFeed:   lastSite,
+			LastSiteTopics: lastSiteTopics,
+			LastNodeFeeds:  lastNode,
+			LastNodeTopics: lastNodeTopics,
+			NodeFeedTotal:  len(s.FollowedNodeNames()),
+			NodeFeedOK:     lastNodeOK,
+			NodeFeedFailed: lastNodeFailed,
+			Running:        running,
 		},
 		Archive: ArchiveInfo{From: from, To: to},
 	}, nil
@@ -246,28 +281,43 @@ func (s *Service) TriggerSync(target string) (bool, error) {
 			}
 		}
 		if target == "" || target == "all" || target == "followed" {
+			total, ok, failed, topicsTotal := 0, 0, 0, 0
 			for _, node := range s.FollowedNodeNames() {
-				if err := s.syncNodeFeed(ctx, node); err != nil {
+				topics, err := s.syncNodeFeed(ctx, node)
+				total++
+				if err != nil {
+					failed++
 					s.SetError(err)
 					s.log.Warn("node feed sync failed", "node", node, "err", err)
+				} else {
+					ok++
+					topicsTotal += topics
 				}
 			}
-			s.markNodeFeedsDone()
+			s.recordNodeFeeds(total, ok, failed, topicsTotal)
 		}
 	}()
 	return true, nil
 }
 
-func (s *Service) markSiteFeedDone() {
+func (s *Service) recordSiteFeed(topics int) {
 	s.stateMu.Lock()
 	s.lastSiteFeed = time.Now().Unix()
+	s.lastSiteTopics = topics
 	s.stateMu.Unlock()
+	s.metaSetInt(context.Background(), "sync.site.last_topics", int64(topics))
 }
 
-func (s *Service) markNodeFeedsDone() {
+func (s *Service) recordNodeFeeds(total, ok, failed, topics int) {
 	s.stateMu.Lock()
 	s.lastNodeFeeds = time.Now().Unix()
+	s.lastNodeTopics = topics
+	s.lastNodeOK = ok
+	s.lastNodeFailed = failed
 	s.stateMu.Unlock()
+	s.metaSetInt(context.Background(), "sync.nodes.last_topics", int64(topics))
+	s.metaSetInt(context.Background(), "sync.nodes.last_ok", int64(ok))
+	s.metaSetInt(context.Background(), "sync.nodes.last_failed", int64(failed))
 }
 
 func (s *Service) metaInt(ctx context.Context, key string) int64 {

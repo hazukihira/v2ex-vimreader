@@ -164,6 +164,70 @@ export function toast(message, type, ms) {
   return node;
 }
 
+/* ---------- 同步详情 ---------- */
+
+export function openSyncInfo(info) {
+  const data = info || {};
+  return openOverlay({
+    title: '同步状态',
+    sub: '点击同步标记可再次打开 · Esc 关闭',
+    className: 'wide',
+    build: function (body) {
+      const root = document.createElement('div');
+      root.className = 'sync-info';
+      const intro = document.createElement('p');
+      intro.className = 'sync-intro';
+      intro.textContent = data.summary || '';
+      if (intro.textContent) root.append(intro);
+
+      if (data.rows && data.rows.length) {
+        const list = document.createElement('dl');
+        list.className = 'sync-kv';
+        for (const row of data.rows) {
+          const dt = document.createElement('dt');
+          dt.textContent = row[0];
+          const dd = document.createElement('dd');
+          dd.textContent = row[1];
+          list.append(dt, dd);
+        }
+        root.append(list);
+      }
+
+      for (const section of data.sections || []) {
+        const block = document.createElement('section');
+        block.className = 'sync-section';
+        const heading = document.createElement('h3');
+        heading.textContent = section.title;
+        block.append(heading);
+        const list = document.createElement('ul');
+        for (const line of section.items || []) {
+          const item = document.createElement('li');
+          item.textContent = line;
+          list.append(item);
+        }
+        block.append(list);
+        root.append(block);
+      }
+
+      if (data.note) {
+        const note = document.createElement('p');
+        note.className = 'sync-note';
+        note.textContent = data.note;
+        root.append(note);
+      }
+      body.append(root);
+      return null;
+    },
+    onKey: function (event) {
+      if (event.key === 'q') {
+        closeOverlay();
+        return true;
+      }
+      return scrollKey(event, stack[stack.length - 1]);
+    },
+  });
+}
+
 /* ---------- 帮助 ---------- */
 
 export function openHelp(groups, note) {

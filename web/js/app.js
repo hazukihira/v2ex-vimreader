@@ -6,7 +6,7 @@ import { KeyEngine } from './vim.js?v=20261030';
 import * as R from './render.js?v=20261030';
 import { initLightbox, isLightboxOpen, openLightbox } from './lightbox.js?v=20261030';
 import {
-  isOverlayOpen, openHelp, openCommandPalette, openMenu, openBlocksManager, openNodePicker, openNodeManager, openLogin, toast,
+  isOverlayOpen, openHelp, openSyncInfo, openCommandPalette, openMenu, openBlocksManager, openNodePicker, openNodeManager, openLogin, toast,
 } from './overlays.js?v=20261030';
 
 const $ = function (selector) { return document.querySelector(selector); };
@@ -48,6 +48,7 @@ const state = {
   error: null,
   reqSeq: 0,
   lastListRoute: null,
+  lastListSnapshot: null,
   history: { items: [], index: -1 },
   clockTimer: 0,
   statusTimer: 0,
@@ -443,6 +444,11 @@ function goBack() {
 function returnToList() {
   if (state.lastListRoute) {
     const target = state.lastListRoute;
+    const snapshot = state.lastListSnapshot;
+    if (snapshot && sameRoute(snapshot.route, target)) {
+      restoreListSnapshot(target, snapshot.data);
+      return;
+    }
     const hash = routeToHash(target);
     if (location.hash === hash) {
       show(target);
@@ -452,6 +458,46 @@ function returnToList() {
     return;
   }
   navigate({ view: 'list', kind: 'home', node: '', date: '', page: 1 });
+}
+
+// 返回打开帖子前的列表时直接用页面快照，不再重新请求列表。
+function restoreListSnapshot(route, data) {
+  cancelPendingBlock();
+  closePreview();
+  closeQueue();
+  closeFavorites();
+  closeDrawer();
+  state.reqSeq += 1;
+  state.route = route;
+  state.viewRoute = route;
+  state.error = null;
+  state.lastListRoute = Object.assign({}, route);
+  state.list = data;
+  state.entries = filterEntries(data.entries || []);
+  state.filter = store.filter(listFilterKey(route));
+  syncFilterInput();
+  state.topic = null;
+  state.replies = [];
+  state.replyEls = [];
+  state.topicSelection = -1;
+  state.summaryPanel = null;
+  state.summary = null;
+  state.summaryOpen = false;
+  state.streaming = false;
+  setMsg('');
+  renderListView(route);
+  const saved = store.position(positionKey(route));
+  state.selection = saved ? clampSelection(saved.index) : clampSelection(-1);
+  paintListSelection(false);
+  requestAnimationFrame(function () {
+    $('#main').scrollTop = saved ? saved.scroll : 0;
+  });
+  const hash = routeToHash(route);
+  setHashSilent(hash);
+  pushHistory(hash);
+  updateChrome();
+  updateEngine();
+  updateFocusCursor();
 }
 
 /* ---------- 位置记忆 ---------- */
@@ -631,6 +677,7 @@ async function loadList(route, options) {
     });
     if (seq !== state.reqSeq) return false;
     state.list = data;
+    state.lastListSnapshot = { route: Object.assign({}, route), data: data };
     if (data.archive) state.archive = data.archive;
     state.entries = filterEntries(data.entries || []);
     state.filter = store.filter(listFilterKey(route));
@@ -2457,8 +2504,60 @@ function updateSyncUi() {
     }
   }
   wrap.className = 'sync' + (kind ? ' ' + kind : '');
-  wrap.title = title || '同步状态';
+  wrap.title = (title ? title + ' · ' : '') + '点击查看同步详情';
   text.textContent = label;
+}
+
+function openSyncOverlay() {
+  const status = state.status || {};
+  const db = status.db || {};
+  const sync = status.sync || {};
+  const fetcher = status.fetcher || {};
+  const archive = state.archive || {};
+  const fmt = function (value) { return value ? R.fmtDateTime(value) : '等待首次同步'; };
+  const nodeRuns = (sync.nodeFeedOk || 0) + (sync.nodeFeedFailed || 0);
+  const rows = [
+    ['本地数据', (db.topics || 0) + ' 主题 · ' + (db.replies || 0) + ' 楼层 · ' + (db.lists || 0) + ' 个列表缓存'],
+    ['归档范围', archive.from || archive.to ? (R.fmtShortDate(archive.from || 0) + ' ~ ' + R.fmtShortDate(archive.to || 0)) : '等待首次同步'],
+    ['站点 feed', fmt(sync.lastSiteFeed) + ' · 最近一轮 ' + (sync.lastSiteTopics || 0) + ' 条主题'],
+    ['节点 feed', fmt(sync.lastNodeFeeds) + ' · 最近一轮 ' + (sync.lastNodeTopics || 0) + ' 条主题'],
+    ['节点状态', (sync.nodeFeedTotal || state.followed.length || 0) + ' 个关注节点 · ' + (nodeRuns ? ('最近一轮成功 ' + (sync.nodeFeedOk || 0) + ' / 失败 ' + (sync.nodeFeedFailed || 0)) : '本次进程尚未完成一轮')],
+    ['请求统计', '本次运行 ' + (fetcher.requests || 0) + ' 次 · ' + (fetcher.rateRemaining ? '剩余额度 ' + fetcher.rateRemaining : '额度已用完或未提供')],
+  ];
+  if (fetcher.lastError) rows.push(['最近错误', fetcher.lastError]);
+  openSyncInfo({
+    summary: sync.running ? '后台同步正在运行。同步只读取公开 feed，不抓取全站历史。' : '后台同步当前空闲。同步只读取公开 feed，不抓取全站历史。',
+    rows: rows,
+    sections: [
+      {
+        title: '同步来源与频率',
+        items: [
+          '站点首页 Atom feed：默认每 10 分钟检查一次，只取 feed 里最近的主题条目。',
+          '关注节点 JSON feed：默认每 30 分钟逐个检查；当前关注 ' + (sync.nodeFeedTotal || state.followed.length || 0) + ' 个节点，节点之间约间隔 0.9 秒。',
+          '节点目录：默认 7 天刷新一次，用来补全节点名称和标题。',
+          '当天主题预取：每 5 分钟检查一次，只补当天尚未抓过正文的主题，最多 200 个；检测到用户操作时暂停。',
+        ],
+      },
+      {
+        title: '写入什么',
+        items: [
+          'feed 同步只写主题元数据：编号、标题、作者、节点、创建时间、最后活动时间、回复数。',
+          'feed 本身不抓正文和全部回复；打开主题时才按需抓正文和当前回复页。',
+          '当天主题会预取第一页正文和回复；正文/回复缓存保留 3 个自然日，节点目录/Feed 状态保留 30 天，主题归档元数据永久保留。',
+        ],
+      },
+      {
+        title: '请求策略',
+        items: [
+          '所有 V2EX 请求共用令牌桶：默认 1 次/秒、突发 2 次；同步、预取和手动打开帖子共享这个额度。',
+          'feed 使用 ETag / Last-Modified 条件请求；304 表示内容没变，不会重复解析和覆盖本地数据。',
+          '同步不是全站爬虫：不遍历 V2EX 全站、不批量抓历史页、不尝试绕过登录限制；受限节点会跳过。',
+          '失败不会无限重试：本轮失败留到下一轮，已抓到的数据继续可用；重启后从 SQLite 恢复，不会全量重抓。',
+        ],
+      },
+    ],
+    note: '右上角的时间来自最近一次站点 feed 检查；节点 feed 和本次运行计数在详情里单独列出。feed 条目数不是全站主题总数，0 条通常表示 304 未变化。',
+  });
 }
 
 function updateArchiveFooter() {
@@ -2887,6 +2986,8 @@ function handleEscape() {
 function bindShell() {
   document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
   document.getElementById('help-btn').addEventListener('click', openHelpOverlay);
+  const syncState = document.getElementById('sync-state');
+  if (syncState) syncState.addEventListener('click', openSyncOverlay);
   document.getElementById('login-state').addEventListener('click', openLoginPanel);
   document.getElementById('nodes-btn').addEventListener('click', openNodesPicker);
   const manageNodesBtn = document.getElementById('nodes-manage-btn');

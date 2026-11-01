@@ -152,7 +152,8 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 .tab:hover { color: var(--text); text-decoration: none; }
 .tab.active { color: var(--text); border-bottom-color: var(--accent); }
 .top-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-.sync { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); white-space: nowrap; }
+.sync { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); white-space: nowrap; cursor: pointer; }
+.sync:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
 .sync .dot { width: 5px; height: 5px; border-radius: 999px; background: var(--muted); }
 .sync.ok .dot { background: var(--success); }
 .sync.busy .dot { background: var(--warning); animation: blink 1.2s steps(2, start) infinite; }
@@ -729,6 +730,15 @@ h1.topic-title {
 .help dt { text-align: right; white-space: nowrap; }
 .help dd { margin: 0; color: var(--muted); }
 .help .help-note { margin-top: 8px; font-size: 11.5px; color: var(--muted); line-height: 1.65; }
+.sync-info { display: flex; flex-direction: column; gap: 14px; font-size: 12.5px; line-height: 1.7; }
+.sync-info .sync-intro { margin: 0; color: var(--muted); }
+.sync-kv { margin: 0; display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 4px 14px; }
+.sync-kv dt { color: var(--muted); }
+.sync-kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.sync-section h3 { margin: 0 0 4px; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.sync-section ul { margin: 0; padding-left: 18px; }
+.sync-section li { margin: 1px 0; color: var(--muted); }
+.sync-info .sync-note { margin: 0; padding-top: 10px; border-top: 1px solid var(--hairline); font-size: 11.5px; color: var(--muted); }
 
 .menu { list-style: none; margin: 0; padding: 0; }
 .menu-item { display: flex; align-items: center; gap: 11px; padding: 6px 10px; cursor: pointer; font-size: 13px; border-left: 2px solid transparent; border-radius: var(--radius-sm); }
