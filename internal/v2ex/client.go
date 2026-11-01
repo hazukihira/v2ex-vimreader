@@ -22,7 +22,8 @@ const baseURL = "https://www.v2ex.com"
 
 // Client is a rate limited HTTP client for v2ex.com.
 type Client struct {
-	hc        *http.Client
+	hc2       *http.Client
+	hc1       *http.Client
 	ua        string
 	limiter   *Limiter
 	retries   int
@@ -98,28 +99,36 @@ func (r *Response) Err() error {
 
 // NewClient creates the shared HTTP client.
 func NewClient(cfg config.FetchConfig, log *slog.Logger) *Client {
-	dialer := &net.Dialer{Timeout: 20 * time.Second, KeepAlive: 30 * time.Second}
-	transport := &http.Transport{
-		Proxy:                 http.ProxyFromEnvironment,
-		DialContext:           dialer.DialContext,
-		ForceAttemptHTTP2:     false,
-		MaxIdleConns:          16,
-		MaxIdleConnsPerHost:   8,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   30 * time.Second,
-		ResponseHeaderTimeout: 30 * time.Second,
-		ExpectContinueTimeout: 2 * time.Second,
-	}
+	timeout := time.Duration(cfg.TimeoutSeconds) * time.Second
 	return &Client{
-		hc: &http.Client{
-			Transport: transport,
-			Timeout:   time.Duration(cfg.TimeoutSeconds) * time.Second,
+		hc2: &http.Client{
+			Transport: newTransport(true),
+			Timeout:   timeout,
+		},
+		hc1: &http.Client{
+			Transport: newTransport(false),
+			Timeout:   timeout,
 		},
 		ua:      cfg.UserAgent,
 		limiter: NewLimiter(cfg.RequestsPerSecond, cfg.Burst),
 		retries: cfg.MaxRetries,
 		maxBody: 8 << 20,
 		log:     log,
+	}
+}
+
+func newTransport(forceHTTP2 bool) *http.Transport {
+	dialer := &net.Dialer{Timeout: 20 * time.Second, KeepAlive: 30 * time.Second}
+	return &http.Transport{
+		Proxy:                 http.ProxyFromEnvironment,
+		DialContext:           dialer.DialContext,
+		ForceAttemptHTTP2:     forceHTTP2,
+		MaxIdleConns:          16,
+		MaxIdleConnsPerHost:   8,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   30 * time.Second,
+		ResponseHeaderTimeout: 30 * time.Second,
+		ExpectContinueTimeout: 2 * time.Second,
 	}
 }
 
@@ -154,13 +163,32 @@ func (c *Client) Get(ctx context.Context, rawURL string, opts ...Option) (*Respo
 		attempts = 1
 	}
 	var lastErr error
+	useHTTP2 := true
 	for attempt := 1; attempt <= attempts; attempt++ {
-		if err := c.limiter.Wait(ctx); err != nil {
-			return nil, err
-		}
-		resp, err := c.do(ctx, rawURL, o)
-		if err != nil {
+		var resp *Response
+		var err error
+		for {
+			if err := c.limiter.Wait(ctx); err != nil {
+				return nil, err
+			}
+			hc := c.hc1
+			if useHTTP2 {
+				hc = c.hc2
+			}
+			resp, err = c.do(ctx, rawURL, o, hc)
+			if err == nil {
+				break
+			}
 			lastErr = err
+			// HTTP/2 在代理/TUN 链路上可能被中途截断；本请求改走 HTTP/1.1。
+			if useHTTP2 && ctx.Err() == nil {
+				c.log.Debug("v2ex http2 request failed, falling back to http1.1", "url", rawURL, "err", err)
+				useHTTP2 = false
+				continue
+			}
+			break
+		}
+		if err != nil {
 			if attempt < attempts {
 				c.backoff(ctx, attempt)
 				continue
@@ -198,7 +226,7 @@ func (c *Client) backoff(ctx context.Context, attempt int) {
 	}
 }
 
-func (c *Client) do(ctx context.Context, rawURL string, o Options) (*Response, error) {
+func (c *Client) do(ctx context.Context, rawURL string, o Options, hc *http.Client) (*Response, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
 	if err != nil {
 		return nil, err
@@ -215,7 +243,7 @@ func (c *Client) do(ctx context.Context, rawURL string, o Options) (*Response, e
 	if o.LastModified != "" {
 		req.Header.Set("If-Modified-Since", o.LastModified)
 	}
-	resp, err := c.hc.Do(req)
+	resp, err := hc.Do(req)
 	if err != nil {
 		return nil, err
 	}
