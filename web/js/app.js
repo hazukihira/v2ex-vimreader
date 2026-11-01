@@ -95,7 +95,7 @@ const HELP_GROUPS = [
       ['r R', '刷新 / 强制刷新'],
       ['y', '复制原帖链接'],
       ['b', '屏蔽菜单'],
-      ['x', '屏蔽当前主题'],
+      ['x', '屏蔽当前主题（连按两次确认）'],
       ['u', '屏蔽当前作者'],
       ['m', '标记已读 / 未读'],
       ['p', '预览当前主题'],
@@ -565,6 +565,7 @@ function scheduleLoading(text) {
 }
 
 async function show(route) {
+  cancelPendingBlock();
   closePreview();
   closeQueue();
   closeFavorites();
@@ -1979,8 +1980,15 @@ async function removeBlock(kind, value) {
   }
 }
 
-async function blockCurrentTopic() {
-  const target = currentTarget();
+let pendingBlock = null;
+
+function cancelPendingBlock() {
+  if (!pendingBlock) return;
+  clearTimeout(pendingBlock.timer);
+  pendingBlock = null;
+}
+
+async function blockTopicTarget(target) {
   if (!target) {
     toast('当前没有可屏蔽的主题', 'error');
     return;
@@ -1988,6 +1996,33 @@ async function blockCurrentTopic() {
   const watchingTopic = state.route && state.route.view === 'topic' && Number(state.route.id) === target.topicId;
   const ok = await addBlock('topic', target.topicId, '主题 #' + target.topicId + '（' + target.title.slice(0, 20) + '…）');
   if (ok && watchingTopic) returnToList();
+}
+
+async function blockCurrentTopic() {
+  await blockTopicTarget(currentTarget());
+}
+
+function requestBlockCurrentTopic() {
+  const target = currentTarget();
+  if (!target) {
+    toast('当前没有可屏蔽的主题', 'error');
+    return;
+  }
+  const now = Date.now();
+  if (pendingBlock && pendingBlock.topicId === target.topicId && now - pendingBlock.at < 1600) {
+    const confirmed = pendingBlock.target;
+    cancelPendingBlock();
+    blockTopicTarget(confirmed);
+    return;
+  }
+  cancelPendingBlock();
+  pendingBlock = {
+    topicId: target.topicId,
+    target: target,
+    at: now,
+    timer: setTimeout(cancelPendingBlock, 1600),
+  };
+  toast('再按一次 x 确认屏蔽主题 #' + target.topicId, null, 2200);
 }
 
 async function blockCurrentAuthor() {
@@ -2734,7 +2769,7 @@ function listBindings() {
     'x': function () {
       if (state.favoritesOpen) removeFavoriteSelected();
       else if (state.queueOpen) removeQueueSelected();
-      else blockCurrentTopic();
+      else requestBlockCurrentTopic();
     },
     '?': openHelpOverlay,
     ':': openPalette,
@@ -2776,7 +2811,7 @@ function topicBindings() {
     's': toggleSummary,
     'f': toggleFavoriteCurrent,
     'b': openBlockMenu,
-    'x': blockCurrentTopic,
+    'x': requestBlockCurrentTopic,
     'u': blockCurrentAuthor,
     'y': copyCurrentLink,
     '?': openHelpOverlay,

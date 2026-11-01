@@ -41,6 +41,22 @@
 
 运行后打开 <http://127.0.0.1:7788>。
 
+### Windows 开机自启
+
+在项目根目录执行一次：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\install-autostart.ps1
+```
+
+会在当前用户的启动目录创建快捷方式，登录后后台启动服务，不打开浏览器。服务会继续使用 `config.toml` 和 `data_dir` 指向的 SQLite 数据库，已有的主题、回复、列表缓存都会保留。
+
+取消自启：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\remove-autostart.ps1
+```
+
 ### 从源码构建
 
 需要 Go 1.27 或更新版本：
@@ -104,7 +120,7 @@ AI Key 建议放在环境变量 `VIMREADER_AI_KEY`。OpenCode Go 等兼容服务
 | `/` + `n` / `N` | 过滤 / 下一个、上一个匹配 |
 | `y` | 复制当前帖子链接 |
 | `b` | 屏蔽菜单 |
-| `x` / `u` | 屏蔽当前帖子 / 作者 |
+| `x` / `u` | 屏蔽当前帖子（连按两次确认） / 作者 |
 | `m` | 切换已读标记 |
 | `p` | 预览当前主题（列表内） |
 | `a` | 加入 / 移出待读 |
