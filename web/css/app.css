@@ -742,7 +742,10 @@ h1.topic-title {
 .block-row.selected { background: var(--accent-soft); border-left-color: var(--accent); }
 .block-row .bkind { flex: 0 0 auto; font-size: 9.5px; line-height: 15px; padding: 0 6px; border: 1px solid var(--hairline); border-radius: 999px; color: var(--muted); font-family: var(--mono); }
 .block-row .bval { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono); }
-.block-row .bremove { font-size: 11px; color: var(--muted); }
+.block-row .bmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.block-row .btitle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.block-row .bmeta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.block-row .bremove { flex: 0 0 auto; font-size: 11px; color: var(--muted); }
 .blocks-split { margin: 10px 0 4px; font-size: 10.5px; letter-spacing: 0.07em; color: var(--muted); text-transform: uppercase; font-family: var(--mono); }
 .blocks-split:first-child { margin-top: 0; }
 

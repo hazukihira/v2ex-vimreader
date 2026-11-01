@@ -130,10 +130,19 @@ type RepliesResponse struct {
 	Replies  []ReplyDTO `json:"replies"`
 }
 
+// BlockedTopic is a blocked topic with enough metadata for the block list.
+type BlockedTopic struct {
+	ID     int64  `json:"id"`
+	Title  string `json:"title"`
+	Author string `json:"author"`
+	Node   string `json:"node"`
+}
+
 // BlocksResponse is the local block list.
 type BlocksResponse struct {
-	Topics []int64  `json:"topics"`
-	Users  []string `json:"users"`
+	Topics     []int64        `json:"topics"`
+	Users      []string       `json:"users"`
+	TopicItems []BlockedTopic `json:"topicItems"`
 }
 
 // NodesResponse is the node directory.

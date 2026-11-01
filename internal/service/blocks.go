@@ -19,6 +19,16 @@ func (s *Service) Blocks(ctx context.Context) (*BlocksResponse, error) {
 	if resp.Users == nil {
 		resp.Users = []string{}
 	}
+	resp.TopicItems = make([]BlockedTopic, 0, len(resp.Topics))
+	for _, id := range resp.Topics {
+		item := BlockedTopic{ID: id}
+		if t, err := s.st.GetTopic(ctx, id); err == nil {
+			item.Title = t.Title
+			item.Author = t.Author
+			item.Node = t.Node
+		}
+		resp.TopicItems = append(resp.TopicItems, item)
+	}
 	return resp, nil
 }
 

@@ -484,7 +484,18 @@ function nodeTitle(name) {
 function normalizeBlocks(data) {
   const topics = new Set((data && data.topics ? data.topics : []).map(Number));
   const users = new Set((data && data.users ? data.users : []).map(String));
-  return { topics: topics, users: users };
+  const topicItems = new Map();
+  for (const item of (data && data.topicItems) || []) {
+    const id = Number(item && item.id);
+    if (!id) continue;
+    topicItems.set(id, {
+      id: id,
+      title: String(item.title || ''),
+      author: String(item.author || ''),
+      node: String(item.node || ''),
+    });
+  }
+  return { topics: topics, users: users, topicItems: topicItems };
 }
 
 function filterEntries(entries) {
@@ -2079,10 +2090,24 @@ function blockUser(name) {
   addBlock('user', name, '用户 ' + name);
 }
 
-function openBlocksManagerView() {
+async function openBlocksManagerView() {
+  try {
+    state.blocks = normalizeBlocks(await api.blocks());
+  } catch (error) {
+    // 旧数据仍可管理，不必因为刷新失败阻止打开。
+  }
   const items = [];
   for (const user of state.blocks.users) items.push({ kind: 'user', value: user });
-  for (const topic of state.blocks.topics) items.push({ kind: 'topic', value: topic });
+  for (const topic of state.blocks.topics) {
+    const meta = state.blocks.topicItems.get(Number(topic)) || {};
+    items.push({
+      kind: 'topic',
+      value: topic,
+      title: meta.title || '',
+      author: meta.author || '',
+      node: meta.node || '',
+    });
+  }
   openBlocksManager(items, removeBlock);
 }
 

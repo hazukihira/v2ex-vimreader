@@ -433,9 +433,26 @@ export function openBlocksManager(items, onRemove) {
         const kindEl = document.createElement('span');
         kindEl.className = 'bkind';
         kindEl.textContent = item.kind === 'user' ? '用户' : '主题';
-        const value = document.createElement('span');
-        value.className = 'bval';
-        value.textContent = String(item.value);
+        let value;
+        if (item.kind === 'user') {
+          value = document.createElement('span');
+          value.className = 'bval';
+          value.textContent = '@' + String(item.value);
+        } else {
+          value = document.createElement('span');
+          value.className = 'bmain';
+          const title = document.createElement('span');
+          title.className = 'btitle';
+          title.textContent = item.title || '#' + String(item.value);
+          const meta = document.createElement('span');
+          meta.className = 'bmeta';
+          const parts = [];
+          if (item.title) parts.push('#' + String(item.value));
+          if (item.author) parts.push(item.author);
+          if (item.node) parts.push(item.node);
+          meta.textContent = parts.join(' · ');
+          value.append(title, meta);
+        }
         const remove = document.createElement('a');
         remove.className = 'bremove';
         remove.href = '#';
