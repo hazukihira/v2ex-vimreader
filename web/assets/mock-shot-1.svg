@@ -16,7 +16,7 @@
   <circle cx="48" cy="87" r="5" fill="#f85149"/>
   <circle cx="66" cy="87" r="5" fill="#d29922"/>
   <circle cx="84" cy="87" r="5" fill="#3fb950"/>
-  <text x="120" y="92" fill="#7d8896" font-family="Consolas, monospace" font-size="13">powershell — C:\Users\sayo</text>
+  <text x="120" y="92" fill="#7d8896" font-family="Consolas, monospace" font-size="13">powershell — C:\workspace\demo</text>
   <rect x="48" y="122" width="16" height="10" rx="2" fill="#4ea1ff"/>
   <text x="74" y="131" fill="#d6dde6" font-family="Consolas, monospace" font-size="14">PS&gt; fzf --height 40%</text>
   <text x="74" y="160" fill="#7d8896" font-family="Consolas, monospace" font-size="13">  src/</text>

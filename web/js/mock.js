@@ -1,7 +1,7 @@
 // ?mock=1 使用的离线数据，覆盖列表、受限节点、图片/视频正文、AI 总结流式与屏蔽过滤。
 
 const REPLY_AUTHORS = [
-  'Livid', 'sayo', 'est', 'binux', 'lepture', 'cloverstd', 'shoaly', 'bytewind',
+  'Livid', 'reader', 'est', 'binux', 'lepture', 'cloverstd', 'shoaly', 'bytewind',
   'spencer', 'stardust', 'dian', 'chengfu', 'xxl', 'yfchen', 'dreamer', 'huangj',
   'kalman', 'moonlight', 'nerd', 'ocean', 'spamking',
 ];
@@ -44,7 +44,7 @@ for (const node of NODES) NODE_TITLES[node.name] = node.title;
 const FOLLOWED = ['tech', 'qna', 'programmer', 'create', 'apple', 'share', 'jobs', 'deals', 'windows', 'linux', 'golang'];
 
 const ENTRIES = [
-  ['programmer', '整理了 12 个 Windows 下顺手的命令行工具，附配置文件', 'sayo', 132],
+  ['programmer', '整理了 12 个 Windows 下顺手的命令行工具，附配置文件', 'reader', 132],
   ['tech', '换了 4K 显示器之后字太小，大家系统缩放都设多少？', 'binux', 26],
   ['qna', '有没有靠谱的本地电子书管理方案？Calibre 太重了', 'lepture', 8],
   ['windows', 'Windows 11 24H2 升级后输入法偶发卡顿，有一样的吗', 'spencer', 17],
@@ -54,7 +54,7 @@ const ENTRIES = [
   ['share', '写了一个只做一件事的小工具：把剪贴板里的链接自动转 Markdown', 'dreamer', 21],
   ['golang', 'Go 1.27 的 range-over-func 在实际项目里的两种用法', 'kalman', 9],
   ['qna', '通勤 40 分钟，有什么办法把碎片时间用起来', 'moonlight', 33],
-  ['create', '做了一个纯前端的 v2ex 阅读器，无框架无构建', 'sayo', 58],
+  ['create', '做了一个纯前端的 v2ex 阅读器，无框架无构建', 'reader', 58],
   ['jobs', '远程岗位：找一位熟悉 Go 的后端，长期合作', 'nerd', 14],
   ['deals', '京东的机械键盘最近有好价吗，预算 400 以内', 'dian', 11],
   ['javascript', '原生 ES Modules 写到一定规模后，你们怎么组织目录', 'bytewind', 19],
@@ -75,7 +75,7 @@ const ENTRIES = [
   ['windows', '资源管理器右键菜单卡顿，清理无效项的一个办法', 'spamking', 2],
   ['share', '把自己三年的 RSS 阅读记录做成了年度报告', 'dreamer', 12],
   ['deals', '双十一前的显示器价格走势，整理了一张表', 'dian', 9],
-  ['idea', '一个想法：把 V2EX 的收藏做成可搜索的本地知识库', 'sayo', 31],
+  ['idea', '一个想法：把 V2EX 的收藏做成可搜索的本地知识库', 'reader', 31],
   ['ideas', '如果让 AI 帮你读长帖，你最想要什么形式的摘要', 'moonlight', 20],
   ['tech', 'Thunderbolt 5 的扩展坞什么时候能降到合理价位', 'est', 8],
   ['programmer', '从 Java 转 Go 半年，最大的不适应是错误处理', 'yfchen', 23],
@@ -252,7 +252,7 @@ function makeTopic(id) {
     node: 'tech',
     nodeTitle: '科技',
     title: '主题 #' + id,
-    author: 'sayo',
+    author: 'reader',
     replies: 0,
     createdAt: nowSec() - 7200,
     createdKnown: true,
