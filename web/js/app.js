@@ -891,7 +891,28 @@ function paintListSelection(scroll) {
   if (previous && previous !== row) previous.classList.remove('current');
   if (row && !row.classList.contains('current')) row.classList.add('current');
   state.paintedSelection = state.selection;
-  if (row && scroll !== false) row.scrollIntoView({ block: 'nearest' });
+  if (row && scroll !== false) scrollListRowIntoView(row);
+}
+
+// 光标离列表上下边缘还有约 45% 视口时就滚动，避免走到最后一行才动。
+function listScrollOffRows() {
+  const rows = visibleRows();
+  return Math.max(3, Math.min(30, Math.floor(rows * 0.45)));
+}
+
+function scrollListRowIntoView(row) {
+  const main = $('#main');
+  if (!main || !row) return;
+  const margin = listScrollOffRows() * ROW_H;
+  const mainRect = main.getBoundingClientRect();
+  const rowRect = row.getBoundingClientRect();
+  let delta = 0;
+  if (rowRect.bottom > mainRect.bottom - margin) {
+    delta = rowRect.bottom - (mainRect.bottom - margin);
+  } else if (rowRect.top < mainRect.top + margin) {
+    delta = rowRect.top - (mainRect.top + margin);
+  }
+  if (delta) main.scrollTop += delta;
 }
 
 function setListSelection(index) {
