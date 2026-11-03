@@ -28,6 +28,11 @@ topic_cache_seconds = 300
 site_feed_poll_seconds = 600
 node_feed_poll_seconds = 1800
 
+[cache]
+# 正文、回复和列表页缓存保留天数，范围 1-3650。
+# 只影响帖子正文/回复缓存；主题标题、作者等归档元数据不设过期。
+retention_days = 3
+
 [login]
 # 可选：粘贴浏览器里 v2ex.com 的 Cookie，用于浏览仅登录可见的受限节点。
 # 建议在网页 UI 的登录面板里粘贴（保存在本地 SQLite），或启动时用 -cookie 参数。

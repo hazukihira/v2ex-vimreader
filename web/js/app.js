@@ -2626,11 +2626,13 @@ function openSyncOverlay() {
   const sync = status.sync || {};
   const fetcher = status.fetcher || {};
   const archive = state.archive || {};
+  const retentionDays = Number(state.config && state.config.cacheRetentionDays) || 3;
   const fmt = function (value) { return value ? R.fmtDateTime(value) : '等待首次同步'; };
   const nodeRuns = (sync.nodeFeedOk || 0) + (sync.nodeFeedFailed || 0);
   const rows = [
     ['本地数据', (db.topics || 0) + ' 主题 · ' + (db.replies || 0) + ' 楼层 · ' + (db.lists || 0) + ' 个列表缓存'],
     ['归档范围', archive.from || archive.to ? (R.fmtShortDate(archive.from || 0) + ' ~ ' + R.fmtShortDate(archive.to || 0)) : '等待首次同步'],
+    ['缓存保留', retentionDays + ' 个自然日（正文 / 回复 / 列表页）'],
     ['站点 feed', fmt(sync.lastSiteFeed) + ' · 最近一轮 ' + (sync.lastSiteTopics || 0) + ' 条主题'],
     ['节点 feed', fmt(sync.lastNodeFeeds) + ' · 最近一轮 ' + (sync.lastNodeTopics || 0) + ' 条主题'],
     ['节点状态', (sync.nodeFeedTotal || state.followed.length || 0) + ' 个关注节点 · ' + (nodeRuns ? ('最近一轮成功 ' + (sync.nodeFeedOk || 0) + ' / 失败 ' + (sync.nodeFeedFailed || 0)) : '本次进程尚未完成一轮')],
@@ -2655,7 +2657,7 @@ function openSyncOverlay() {
         items: [
           'feed 同步只写主题元数据：编号、标题、作者、节点、创建时间、最后活动时间、回复数。',
           'feed 本身不抓正文和全部回复；打开主题时才按需抓正文和当前回复页。',
-          '当天主题会预取第一页正文和回复；正文/回复缓存保留 3 个自然日，节点目录/Feed 状态保留 30 天，主题归档元数据永久保留。',
+          '当天主题会预取第一页正文和回复；正文/回复/列表页缓存默认保留 ' + retentionDays + ' 个自然日，节点目录/Feed 状态保留 30 天，主题归档元数据永久保留。',
         ],
       },
       {

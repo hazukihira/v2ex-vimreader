@@ -13,11 +13,12 @@ type ArchiveInfo struct {
 
 // BootstrapConfig is the client-safe part of the configuration.
 type BootstrapConfig struct {
-	AIEnabled bool   `json:"aiEnabled"`
-	AIModel   string `json:"aiModel"`
-	Theme     string `json:"theme"`
-	SiteTitle string `json:"siteTitle"`
-	Timezone  string `json:"timezone"`
+	AIEnabled          bool   `json:"aiEnabled"`
+	AIModel            string `json:"aiModel"`
+	Theme              string `json:"theme"`
+	SiteTitle          string `json:"siteTitle"`
+	Timezone           string `json:"timezone"`
+	CacheRetentionDays int    `json:"cacheRetentionDays"`
 }
 
 // FetcherStatus reports outbound request statistics.

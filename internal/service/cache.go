@@ -2,18 +2,27 @@ package service
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"time"
 )
 
 const (
-	cacheRetentionDays = 3
-	cacheAuxRetention  = 30 * 24 * time.Hour
-	cachePrefetchBatch = 200
-	cacheMaintInterval = 5 * time.Minute
-	cacheInitialDelay  = 20 * time.Second
-	cachePruneMetaKey  = "cache.cleanup.day.v2"
+	cacheDefaultRetentionDays = 3
+	cacheAuxRetention         = 30 * 24 * time.Hour
+	cachePrefetchBatch        = 200
+	cacheMaintInterval        = 5 * time.Minute
+	cacheInitialDelay         = 20 * time.Second
+	cachePruneMetaPrefix      = "cache.cleanup.day.v2"
 )
+
+func (s *Service) cacheRetentionDays() int {
+	days := s.cfg.Cache.RetentionDays
+	if days < 1 {
+		return cacheDefaultRetentionDays
+	}
+	return days
+}
 
 func (s *Service) cacheMaintenanceLoop(ctx context.Context) {
 	select {
@@ -46,10 +55,12 @@ func (s *Service) localDayStart(t time.Time) time.Time {
 
 func (s *Service) pruneOldCache(ctx context.Context) {
 	start := s.localDayStart(time.Now())
-	if s.metaInt(ctx, cachePruneMetaKey) == start.Unix() {
+	days := s.cacheRetentionDays()
+	metaKey := cachePruneMetaPrefix + ".r" + strconv.Itoa(days)
+	if s.metaInt(ctx, metaKey) == start.Unix() {
 		return
 	}
-	contentCutoff := start.AddDate(0, 0, -(cacheRetentionDays - 1))
+	contentCutoff := start.AddDate(0, 0, -(days - 1))
 	removed, err := s.st.PurgeTopicCacheBefore(ctx, contentCutoff.Unix())
 	if err != nil {
 		s.log.Warn("topic cache purge failed", "err", err)
@@ -72,11 +83,12 @@ func (s *Service) pruneOldCache(ctx context.Context) {
 		s.log.Warn("feed state purge failed", "err", err)
 		return
 	}
-	s.metaSetInt(ctx, cachePruneMetaKey, start.Unix())
+	s.metaSetInt(ctx, metaKey, start.Unix())
 	if removed > 0 || summaries > 0 || nodes > 0 || feeds > 0 {
 		s.log.Info("cache purged",
 			"topic_bodies", removed, "summaries", summaries,
 			"nodes", nodes, "feed_states", feeds,
+			"retention_days", days,
 			"content_cutoff", contentCutoff.Format("2006-01-02"))
 	}
 }

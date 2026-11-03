@@ -22,6 +22,7 @@ type Config struct {
 	Timezone string `toml:"timezone"`
 
 	Fetch FetchConfig `toml:"fetch"`
+	Cache CacheConfig `toml:"cache"`
 	Sync  SyncConfig  `toml:"sync"`
 	AI    AIConfig    `toml:"ai"`
 	Login LoginConfig `toml:"login"`
@@ -46,6 +47,12 @@ type FetchConfig struct {
 	TopicCacheSeconds   int     `toml:"topic_cache_seconds"`
 	SiteFeedPollSeconds int     `toml:"site_feed_poll_seconds"`
 	NodeFeedPollSeconds int     `toml:"node_feed_poll_seconds"`
+}
+
+// CacheConfig controls how long topic content, replies and list pages stay
+// in the local cache. Topic metadata is archived separately and is not affected.
+type CacheConfig struct {
+	RetentionDays int `toml:"retention_days"`
 }
 
 // SyncConfig controls the background incremental sync.
@@ -92,6 +99,9 @@ func Default() Config {
 			TopicCacheSeconds:   300,
 			SiteFeedPollSeconds: 600,
 			NodeFeedPollSeconds: 1800,
+		},
+		Cache: CacheConfig{
+			RetentionDays: 3,
 		},
 		Sync: SyncConfig{
 			Enabled:  true,
@@ -177,6 +187,12 @@ func (c *Config) validate() error {
 	}
 	if c.Fetch.TopicCacheSeconds < 0 {
 		c.Fetch.TopicCacheSeconds = 0
+	}
+	if c.Cache.RetentionDays < 1 {
+		c.Cache.RetentionDays = 3
+	}
+	if c.Cache.RetentionDays > 3650 {
+		c.Cache.RetentionDays = 3650
 	}
 	if c.AI.TimeoutSeconds <= 0 {
 		c.AI.TimeoutSeconds = 120
