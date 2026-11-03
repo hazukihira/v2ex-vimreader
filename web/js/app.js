@@ -11,6 +11,13 @@ import {
 
 const $ = function (selector) { return document.querySelector(selector); };
 const ROW_H = 27;
+const LIST_SORT_OPTIONS = [
+  { key: 'default', label: '默认顺序', hint: '恢复列表原始顺序' },
+  { key: 'replies', label: '回复数从多到少', hint: '回复最多的排最前' },
+  { key: 'created', label: '发布时间从新到旧', hint: '按主题创建时间' },
+  { key: 'touched', label: '最后活动从新到旧', hint: '按最后回复时间' },
+  { key: 'title', label: '标题 A-Z', hint: '按标题排序' },
+];
 
 const state = {
   boot: null,
@@ -49,6 +56,7 @@ const state = {
   reqSeq: 0,
   lastListRoute: null,
   lastListSnapshot: null,
+  listSort: { key: 'default' },
   history: { items: [], index: -1 },
   clockTimer: 0,
   statusTimer: 0,
@@ -90,6 +98,7 @@ const HELP_GROUPS = [
       ['Enter Space l o', '打开主题'],
       ['h q', '返回'],
       ['[ ]', '上一页 / 下一页'],
+      ['S', '排序当前页（回复 / 时间 / 标题）'],
       ['1-9 + 动作', '数字前缀（5j / 3]）'],
       ['/', '过滤当前列表'],
       ['n N', '下一个 / 上一个匹配'],
@@ -473,7 +482,7 @@ function restoreListSnapshot(route, data) {
   state.error = null;
   state.lastListRoute = Object.assign({}, route);
   state.list = data;
-  state.entries = filterEntries(data.entries || []);
+  state.entries = visibleListEntries(data.entries || []);
   state.filter = store.filter(listFilterKey(route));
   syncFilterInput();
   state.topic = null;
@@ -548,6 +557,87 @@ function filterEntries(entries) {
   return (entries || []).filter(function (entry) {
     return !state.blocks.topics.has(Number(entry.id)) && !state.blocks.users.has(String(entry.author));
   });
+}
+
+function listSortOption(key) {
+  return LIST_SORT_OPTIONS.find(function (option) { return option.key === key; }) || LIST_SORT_OPTIONS[0];
+}
+
+function listSortLabel() {
+  return listSortOption(state.listSort.key).label;
+}
+
+function applyListSort(entries) {
+  const list = (entries || []).slice();
+  const key = state.listSort.key;
+  const num = function (value) { return Number(value) || 0; };
+  if (key === 'replies') {
+    list.sort(function (a, b) {
+      return num(b.replies) - num(a.replies) || num(b.lastTouchedAt) - num(a.lastTouchedAt);
+    });
+  } else if (key === 'created') {
+    list.sort(function (a, b) { return num(b.createdAt) - num(a.createdAt); });
+  } else if (key === 'touched') {
+    list.sort(function (a, b) {
+      return num(b.lastTouchedAt) - num(a.lastTouchedAt) || num(b.createdAt) - num(a.createdAt);
+    });
+  } else if (key === 'title') {
+    list.sort(function (a, b) {
+      return String(a.title || '').localeCompare(String(b.title || ''), 'zh-Hans-CN');
+    });
+  }
+  return list;
+}
+
+function visibleListEntries(entries) {
+  return applyListSort(filterEntries(entries));
+}
+
+function loadListSortPreference() {
+  try {
+    const key = localStorage.getItem('v2r:sort');
+    if (LIST_SORT_OPTIONS.some(function (option) { return option.key === key; })) {
+      state.listSort.key = key;
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function applyListSortKey(key) {
+  const option = listSortOption(key);
+  state.listSort.key = option.key;
+  try { localStorage.setItem('v2r:sort', option.key); } catch (e) { /* ignore */ }
+  if (!state.route || state.route.view !== 'list' || !state.list) {
+    updateChrome();
+    return;
+  }
+  const previous = state.entries[state.selection];
+  const selectedId = previous ? Number(previous.id) : 0;
+  state.entries = visibleListEntries(state.list.entries || []);
+  renderListView(state.route);
+  let selected = state.selection;
+  if (selectedId) {
+    selected = state.entries.findIndex(function (entry) { return Number(entry.id) === selectedId; });
+  }
+  state.selection = selected >= 0 ? selected : clampSelection(state.selection);
+  paintListSelection(true);
+  updateChrome();
+  toast('排序：' + option.label, 'ok');
+}
+
+function openListSortMenu() {
+  if (!state.route || state.route.view !== 'list') {
+    toast('排序只适用于帖子列表', 'error');
+    return;
+  }
+  const items = LIST_SORT_OPTIONS.map(function (option, index) {
+    return {
+      key: ['d', 'r', 'c', 'a', 't'][index],
+      label: option.label,
+      hint: option.key === state.listSort.key ? '当前' : option.hint,
+      run: function () { applyListSortKey(option.key); },
+    };
+  });
+  openMenu('排序当前页', items);
 }
 
 function filterReplies(replies) {
@@ -679,7 +769,7 @@ async function loadList(route, options) {
     state.list = data;
     state.lastListSnapshot = { route: Object.assign({}, route), data: data };
     if (data.archive) state.archive = data.archive;
-    state.entries = filterEntries(data.entries || []);
+    state.entries = visibleListEntries(data.entries || []);
     state.filter = store.filter(listFilterKey(route));
     syncFilterInput();
     renderListView(route);
@@ -858,6 +948,7 @@ function renderListView(route) {
     notice: data.notice || '',
     stale: Boolean(data.stale),
     fetchedAt: data.fetchedAt,
+    sortLabel: listSortLabel(),
     archive: data.archive || state.archive,
     loginHint: loginHint,
   });
@@ -2019,7 +2110,7 @@ function afterBlocksChanged() {
   if (!state.route) return;
   if (state.route.view === 'list' && state.list) {
     const previous = state.selection;
-    state.entries = filterEntries(state.list.entries || []);
+    state.entries = visibleListEntries(state.list.entries || []);
     renderListView(state.route);
     state.selection = clampSelection(previous);
     paintListSelection(false);
@@ -2462,7 +2553,7 @@ function pageInfo() {
 function hints() {
   if (!state.route) return '';
   if (state.route.view === 'list') {
-    return 'j/k 选择 · Enter 打开 · [ ] 翻页 · / 过滤 · y 复制 · b 屏蔽 · ? 帮助';
+    return 'j/k 选择 · Enter 打开 · [ ] 翻页 · S 排序 · / 过滤 · y 复制 · b 屏蔽 · ? 帮助';
   }
   return 'j/k 楼层 · [ ] 翻页 · t 最新 · s 总结 · i 图片 · b 屏蔽 · q 返回 · ? 帮助';
 }
@@ -2902,6 +2993,7 @@ function listBindings() {
     'g l': openLoginPanel,
     'r': function () { reloadCurrent({ force: false }); },
     'R': function () { reloadCurrent({ force: true }); },
+    'S': openListSortMenu,
     '[': function (count) { gotoListPage(currentListPage() - count); },
     ']': function (count) { gotoListPage(currentListPage() + count); },
     '/': focusFilter,
@@ -3032,6 +3124,14 @@ function bindShell() {
   if (queueOverlay) queueOverlay.addEventListener('click', function (event) {
     if (event.target === queueOverlay) closeQueue();
   });
+  const viewRoot = document.getElementById('view');
+  if (viewRoot) viewRoot.addEventListener('click', function (event) {
+    const sortButton = event.target.closest('.sort-btn');
+    if (!sortButton) return;
+    event.preventDefault();
+    event.stopPropagation();
+    openListSortMenu();
+  });
   document.getElementById('main').addEventListener('scroll', function () {
     if (state.route && state.route.view === 'topic') requestAnimationFrame(updateFocusCursor);
   });
@@ -3157,6 +3257,7 @@ function onGlobalKey(event) {
 async function boot() {
   initLightbox();
   store.pruneCache();
+  loadListSortPreference();
   state.queue = loadQueue();
   updateQueueUi();
   state.favorites = loadFavorites();

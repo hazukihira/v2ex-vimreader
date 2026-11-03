@@ -141,6 +141,14 @@ function addToolbar(wrap, ctx) {
   const spacer = h('span', { class: 'spacer' });
   toolbar.append(spacer);
 
+  if (ctx.sortLabel) {
+    toolbar.append(h('button', {
+      class: 'mini-btn sort-btn',
+      type: 'button',
+      title: '排序当前页 (S)',
+    }, '排序：' + ctx.sortLabel));
+  }
+
   if (ctx.kind === 'day') {
     const input = h('input', { type: 'date', id: 'day-date', value: ctx.date || '', title: '选择日期' });
     toolbar.append(h('span', { class: 'muted', text: '日期' }), input);
@@ -254,8 +262,8 @@ export function renderList(view, ctx) {
   const hint = h('div', { class: 'list-hint' });
   const hintRow = h('div', { class: 'hint-row' });
   const hints = ctx.kind === 'day'
-    ? [['j/k', '选择'], ['Enter', '打开'], ['[ ]', '翻页'], ['/', '过滤'], ['?', '帮助']]
-    : [['j/k', '选择'], ['Enter', '打开'], ['[ ]', '翻页'], ['/ 过滤', ''], ['y 复制', ''], ['b 屏蔽', ''], ['?', '帮助']];
+    ? [['j/k', '选择'], ['Enter', '打开'], ['[ ]', '翻页'], ['S', '排序'], ['/', '过滤'], ['?', '帮助']]
+    : [['j/k', '选择'], ['Enter', '打开'], ['[ ]', '翻页'], ['S 排序', ''], ['/ 过滤', ''], ['y 复制', ''], ['b 屏蔽', ''], ['?', '帮助']];
   for (const pair of hints) {
     const item = h('span');
     const kbd = h('kbd', { text: pair[0] });
